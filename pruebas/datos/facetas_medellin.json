@@ -1,0 +1,110 @@
+[
+ {
+  "facet": "categories",
+  "count": 410,
+  "values": [
+   {
+    "value": "Función pública",
+    "count": 148
+   },
+   {
+    "value": "Educación",
+    "count": 58
+   },
+   {
+    "value": "Salud y Protección Social",
+    "count": 40
+   },
+   {
+    "value": "Ambiente y Desarrollo Sostenible",
+    "count": 30
+   },
+   {
+    "value": "Minas y Energía",
+    "count": 17
+   },
+   {
+    "value": "Organismos de Control",
+    "count": 17
+   },
+   {
+    "value": "Vivienda, Ciudad y Territorio",
+    "count": 16
+   },
+   {
+    "value": "Transporte",
+    "count": 12
+   },
+   {
+    "value": "Ordenamiento Territorial",
+    "count": 11
+   },
+   {
+    "value": "Ciencia, Tecnología e Innovación",
+    "count": 9
+   },
+   {
+    "value": "Comercio, Industria y Turismo",
+    "count": 9
+   },
+   {
+    "value": "Deporte y Recreación",
+    "count": 8
+   }
+  ]
+ },
+ {
+  "facet": "Información-de-la-Entidad_Nombre-de-la-Entidad",
+  "count": 417,
+  "values": [
+   {
+    "value": "Gobernación de Antioquia, Antioquia",
+    "count": 35
+   },
+   {
+    "value": "Corporación Autónoma Regional del Centro de Antioquia, Antioquia",
+    "count": 29
+   },
+   {
+    "value": "Alcaldía de Medellín, Antioquia",
+    "count": 25
+   },
+   {
+    "value": "E.S.P. Empresas Públicas de Medellín - EPM, Antioquia",
+    "count": 22
+   },
+   {
+    "value": "Colegio Mayor de Antioquia Institución Universitaria, Antioquia",
+    "count": 20
+   },
+   {
+    "value": "Fundación Empresas Públicas de Medellín, Antioquia",
+    "count": 14
+   },
+   {
+    "value": "Gobernación de Antioquia",
+    "count": 10
+   },
+   {
+    "value": "Institución Universitaria Pascual Bravo de Medellín, Antioquia",
+    "count": 10
+   },
+   {
+    "value": "Agencia de Educación Postsecundaria de Medellín, Antioquia",
+    "count": 9
+   },
+   {
+    "value": "Cámara de Comercio de Medellín, Antioquia",
+    "count": 9
+   },
+   {
+    "value": "Corporación Gilberto Echeverri Mejía, Antioquia",
+    "count": 7
+   },
+   {
+    "value": "E.S.P. Aguas Nacionales de Medellín, Antioquia",
+    "count": 7
+   }
+  ]
+ }
+]

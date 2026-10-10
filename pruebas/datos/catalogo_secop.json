@@ -1,0 +1,196 @@
+{
+ "results": [
+  {
+   "resource": {
+    "name": "SECOP Integrado",
+    "id": "rpmr-utcd",
+    "resource_name": null,
+    "parent_fxf": [],
+    "description": "Información integrada de los procesos de compra pública que se han registrado en las plataformas SECOP I y II, que han finalizado con un contrato.",
+    "attribution": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C.",
+    "attribution_link": "https://www.colombiacompra.gov.co",
+    "type": "dataset",
+    "updatedAt": "2026-10-10T14:59:53.000Z",
+    "createdAt": "2019-01-08T18:20:53.000Z",
+    "metadata_updated_at": "2026-09-29T05:15:16.000Z",
+    "data_updated_at": "2026-10-10T14:59:53.000Z",
+    "page_views": {
+     "page_views_last_week": 5980,
+     "page_views_last_month": 26853,
+     "page_views_total": 1022578,
+     "page_views_last_week_log": 12.54617100226735,
+     "page_views_last_month_log": 14.71284937838781,
+     "page_views_total_log": 19.963780873132364
+    },
+    "download_count": 70412,
+    "provenance": "official",
+    "lens_view_type": "tabular",
+    "lens_display_type": "table",
+    "locked": false,
+    "backend": "nbe",
+    "blob_mime_type": null,
+    "hide_from_data_json": false,
+    "publication_date": "2024-11-24T23:58:30.000Z"
+   },
+   "classification": {
+    "categories": [],
+    "tags": [],
+    "domain_category": "Estadísticas Nacionales",
+    "domain_tags": [
+     "secop",
+     "e-procurement",
+     "compra pública"
+    ],
+    "domain_metadata": [
+     {
+      "key": "Información-de-Datos_Idioma",
+      "value": "Español"
+     },
+     {
+      "key": "Información-de-Datos_Cobertura-Geográfica",
+      "value": "Nacional"
+     },
+     {
+      "key": "Información-de-Datos_Frecuencia-de-Actualización",
+      "value": "Diaria"
+     },
+     {
+      "key": "Información-de-la-Entidad_Sector",
+      "value": "Planeación"
+     },
+     {
+      "key": "Información-de-la-Entidad_Área-o-dependencia",
+      "value": "Subdirección"
+     },
+     {
+      "key": "Información-de-la-Entidad_Nombre-de-la-Entidad",
+      "value": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C."
+     },
+     {
+      "key": "Información-de-la-Entidad_Orden",
+      "value": "Nacional"
+     },
+     {
+      "key": "Información-de-la-Entidad_Municipio",
+      "value": "Bogotá D.C."
+     },
+     {
+      "key": "Información-de-la-Entidad_DIVIPOLA-Municipio",
+      "value": "11001"
+     },
+     {
+      "key": "Información-de-la-Entidad_Departamento",
+      "value": "Bogotá D.C."
+     }
+    ]
+   },
+   "metadata": {
+    "domain": "www.datos.gov.co",
+    "license": "Creative Commons Attribution | Share Alike 4.0 International"
+   },
+   "permalink": "https://www.datos.gov.co/d/rpmr-utcd",
+   "link": "https://www.datos.gov.co/Estadísticas-Nacionales/SECOP-Integrado/rpmr-utcd"
+  },
+  {
+   "resource": {
+    "name": "SECOP II - Contratos Electrónicos",
+    "id": "jbjy-vk9h",
+    "resource_name": null,
+    "parent_fxf": [],
+    "description": "Información de los contratos registrados en SECOP II desde su lanzamiento",
+    "attribution": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C.",
+    "attribution_link": "https://colombiacompra.gov.co",
+    "type": "dataset",
+    "updatedAt": "2026-10-10T17:19:55.000Z",
+    "createdAt": "2019-10-01T04:42:13.000Z",
+    "metadata_updated_at": "2026-09-27T07:48:31.000Z",
+    "data_updated_at": "2026-10-10T17:19:55.000Z",
+    "page_views": {
+     "page_views_last_week": 18611,
+     "page_views_last_month": 72642,
+     "page_views_total": 2828087,
+     "page_views_last_week_log": 14.183945471757248,
+     "page_views_last_month_log": 16.148536163617585,
+     "page_views_total_log": 21.43139558168802
+    },
+    "download_count": 241207,
+    "provenance": "official",
+    "lens_view_type": "tabular",
+    "lens_display_type": "table",
+    "locked": false,
+    "backend": "nbe",
+    "blob_mime_type": null,
+    "hide_from_data_json": false,
+    "publication_date": "2026-09-27T07:48:31.000Z"
+   },
+   "classification": {
+    "categories": [],
+    "tags": [],
+    "domain_category": "Estadísticas Nacionales",
+    "domain_tags": [
+     "secop",
+     "contratos",
+     "procesos de contratación",
+     "compra pública"
+    ],
+    "domain_metadata": [
+     {
+      "key": "Información-de-Datos_Idioma",
+      "value": "Español"
+     },
+     {
+      "key": "Información-de-Datos_Cobertura-Geográfica",
+      "value": "Nacional"
+     },
+     {
+      "key": "Información-de-Datos_Frecuencia-de-Actualización",
+      "value": "Diaria"
+     },
+     {
+      "key": "Información-de-la-Entidad_Sector",
+      "value": "Planeación"
+     },
+     {
+      "key": "Información-de-la-Entidad_Área-o-dependencia",
+      "value": "Subdirección de Información y Desarrollo Tecnológico"
+     },
+     {
+      "key": "Información-de-la-Entidad_Nombre-de-la-Entidad",
+      "value": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C."
+     },
+     {
+      "key": "Información-de-la-Entidad_Orden",
+      "value": "Nacional"
+     },
+     {
+      "key": "Información-de-la-Entidad_Municipio",
+      "value": "Bogotá D.C."
+     },
+     {
+      "key": "Información-de-la-Entidad_DIVIPOLA-Municipio",
+      "value": "11001"
+     },
+     {
+      "key": "Información-de-la-Entidad_Departamento",
+      "value": "Bogotá D.C."
+     }
+    ]
+   },
+   "metadata": {
+    "domain": "www.datos.gov.co",
+    "license": "Creative Commons Attribution | Share Alike 4.0 International"
+   },
+   "permalink": "https://www.datos.gov.co/d/jbjy-vk9h",
+   "link": "https://www.datos.gov.co/Estadísticas-Nacionales/SECOP-II-Contratos-Electrónicos/jbjy-vk9h"
+  }
+ ],
+ "resultSetSize": 152,
+ "timings": {
+  "serviceMillis": 20,
+  "searchMillis": [
+   9,
+   5
+  ]
+ },
+ "warnings": []
+}

@@ -1,44 +1,45 @@
 [project]
-name = "datagouv-mcp"
+name = "datos-abiertos-colombia"
 dynamic = ["version"]
-description = "Model Context Protocol (MCP) server for interacting with data.gouv.fr datasets and resources via LLM chatbots"
-authors = [{ name = "data.gouv.fr", email = "opendatateam@data.gouv.fr" }]
+description = "Conector MCP para buscar y consultar los datos abiertos de Colombia (datos.gov.co). Adaptado de datagouv-mcp."
+authors = [{ name = "Estado X" }, { name = "data.gouv.fr (proyecto original)", email = "opendatateam@data.gouv.fr" }]
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.13,<3.15"
 dependencies = [
     "mcp>=1.25.0,<2",
     "niquests>=3.19.1",
-    "pyyaml>=6.0",
-    "sentry-sdk>=2.54.0",
+    "uvicorn>=0.30",
 ]
 
+[project.scripts]
+datos-abiertos-colombia = "datos_colombia.servidor:run"
+
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+requires = ["setuptools>=77.0", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["datos_colombia*"]
 
 [dependency-groups]
 dev = [
-    "niquests-mock>=0.4.0",
     "pytest>=9.0.0",
     "pytest-asyncio>=0.23.0",
     "ruff>=0.14.0",
-    "ty>=0.0.18",
 ]
 
 [tool.setuptools_scm]
+fallback_version = "0.1.0"
 
 [tool.ruff.lint]
-# Match CI: `ruff check --select I .` — default Ruff select does not include isort (I).
 extend-select = ["I"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["tests"]
+testpaths = ["pruebas"]
 python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
 markers = [
-    "stress: stress tests requiring a running MCP server (not run by default)",
-    "health_check: health check requiring a running MCP server (not run by default)",
+    "en_vivo: pruebas que consultan datos.gov.co en vivo (correr con -m en_vivo)",
 ]
-addopts = "-m 'not stress and not health_check'"
+addopts = "-m 'not en_vivo'"

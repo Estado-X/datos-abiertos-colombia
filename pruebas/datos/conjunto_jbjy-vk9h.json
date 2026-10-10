@@ -1,0 +1,85 @@
+{
+ "id": "jbjy-vk9h",
+ "name": "SECOP II - Contratos Electrónicos",
+ "assetType": "dataset",
+ "attribution": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C.",
+ "category": "Estadísticas Nacionales",
+ "description": "Información de los contratos registrados en SECOP II desde su lanzamiento",
+ "downloadCount": 241229,
+ "viewCount": 2828325,
+ "licenseId": "CC_40_BY_SA",
+ "license": {
+  "name": "Creative Commons Attribution | Share Alike 4.0 International",
+  "logoUrl": "images/licenses/cc30bysa.png",
+  "termsLink": "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+ },
+ "rowsUpdatedAt": 1791652795,
+ "metadata": {
+  "custom_fields": {
+   "Información de la Entidad": {
+    "Municipio": "Bogotá D.C.",
+    "Nombre de la Entidad": "Agencia Nacional de Contratación Pública - Colombia Compra Eficiente, Bogotá D.C.",
+    "DIVIPOLA Municipio": "11001",
+    "Orden": "Nacional",
+    "Sector": "Planeación",
+    "Área o dependencia": "Subdirección de Información y Desarrollo Tecnológico",
+    "Departamento": "Bogotá D.C."
+   },
+   "Información de Datos": {
+    "Cobertura Geográfica": "Nacional",
+    "Idioma": "Español",
+    "Frecuencia de Actualización": "Diaria"
+   }
+  }
+ },
+ "columns": [
+  {
+   "fieldName": "nombre_entidad",
+   "name": "Nombre Entidad",
+   "dataTypeName": "text",
+   "description": "Nombre de la entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "nit_entidad",
+   "name": "Nit Entidad",
+   "dataTypeName": "number",
+   "description": "NIT de la entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "departamento",
+   "name": "Departamento",
+   "dataTypeName": "text",
+   "description": "Departamento en el cual se registró la entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "ciudad",
+   "name": "Ciudad",
+   "dataTypeName": "text",
+   "description": "Ciudad en el cual se registró la entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "localizaci_n",
+   "name": "Localización",
+   "dataTypeName": "text",
+   "description": "Ubicación completa de la entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "orden",
+   "name": "Orden",
+   "dataTypeName": "text",
+   "description": "Orden entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "sector",
+   "name": "Sector",
+   "dataTypeName": "text",
+   "description": "Sector entidad del estado que publica el contrato"
+  },
+  {
+   "fieldName": "rama",
+   "name": "Rama",
+   "dataTypeName": "text",
+   "description": "Rama del estado de la entidad que publica el contrato"
+  }
+ ]
+}

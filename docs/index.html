@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Datos abiertos de Colombia · Estado X</title>
+<meta name="description" content="Busca entre los conjuntos de datos de datos.gov.co, mira sus columnas y llévalos a tu IA. Incluye un conector para Claude.">
+<meta property="og:title" content="Datos abiertos de Colombia, a la mano">
+<meta property="og:description" content="Buscador de datos.gov.co con «Llévalo a tu IA» y conector para Claude Desktop y Claude Code.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap">
+<link rel="stylesheet" href="assets/estilos.css">
+</head>
+<body>
+<header class="banda">
+  <div class="contenedor banda__in">
+    <p class="kicker">Buscador abierto · Estado X</p>
+    <h1>Los datos abiertos de <em>Colombia</em>, a la mano</h1>
+    <p class="banda__sub">Busca en datos.gov.co, mira qué columnas trae cada conjunto y llévalo a tu IA con un clic. Si usas Claude, instala el conector y pregúntale directamente.</p>
+    <form class="buscador" id="form" role="search">
+      <label class="oculto" for="q">Qué datos buscas</label>
+      <input id="q" type="search" placeholder="Ej.: contratos SECOP, dengue, matrícula, accidentes de tránsito" autocomplete="off">
+      <button class="boton boton--cadmio" type="submit">Buscar</button>
+    </form>
+    <div class="filtros">
+      <label>Categoría<select id="categoria"><option value="">Todas</option></select></label>
+      <label>Orden<select id="orden">
+        <option value="relevancia">Más relevantes</option>
+        <option value="vistas">Más consultados</option>
+        <option value="recientes">Actualizados hace poco</option>
+      </select></label>
+    </div>
+    <p class="cifra-portal" id="cifra-portal">Conectando con datos.gov.co…</p>
+  </div>
+</header>
+
+<main class="contenedor">
+  <section class="bloque" aria-labelledby="t-res">
+    <h2 id="t-res">Conjuntos de datos</h2>
+    <p class="estado-busqueda" id="estado" aria-live="polite">Cargando los más consultados…</p>
+    <div class="resultados" id="resultados"></div>
+    <div class="mas"><button class="boton boton--claro" id="mas" type="button" hidden>Ver más resultados</button></div>
+  </section>
+
+  <section class="bloque dos" aria-label="Llévalo a tu IA">
+    <div class="tarjeta">
+      <h2>Llévalo a cualquier IA</h2>
+      <p>El botón <strong>«Llévalo a tu IA»</strong> copia un texto con el nombre del conjunto, quién lo publica, la fecha, sus columnas y la dirección para consultarlo. Pégalo en Claude, ChatGPT, Gemini o la que uses, y escribe tu pregunta al final.</p>
+      <p class="nota">Pide siempre que la respuesta cite la entidad, el ID del conjunto y la fecha de actualización.</p>
+    </div>
+    <div class="tarjeta">
+      <h2>Conector para Claude</h2>
+      <p>Con el conector, Claude busca, lee y resume los datos por su cuenta. Necesitas <a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a> instalado.</p>
+      <p><strong>Claude Code:</strong></p>
+      <pre class="codigo" id="cfg-code">claude mcp add datos-colombia -- uvx --from git+https://github.com/Estado-X/datos-abiertos-colombia datos-abiertos-colombia</pre>
+      <p><strong>Claude Desktop</strong> (archivo <code>claude_desktop_config.json</code>):</p>
+      <pre class="codigo" id="cfg-desktop">{
+  "mcpServers": {
+    "datos-colombia": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/Estado-X/datos-abiertos-colombia", "datos-abiertos-colombia"]
+    }
+  }
+}</pre>
+      <p class="nota">Más detalles y otras formas de instalarlo en el <a href="https://github.com/Estado-X/datos-abiertos-colombia#readme" target="_blank" rel="noopener">README del repositorio</a>.</p>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <div class="tarjeta">
+      <h2>Límites</h2>
+      <ul class="lista">
+        <li>Los datos son de cada entidad que los publica y no están validados aquí: revisa fechas, unidades y valores atípicos antes de sacar conclusiones.</li>
+        <li>El buscador y la muestra se cargan directamente desde datos.gov.co en tu navegador. Si el portal está lento o caído, este buscador también.</li>
+        <li>Muestra solo conjuntos de tipo tabla; los mapas, gráficos y enlaces externos del portal no aparecen.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__in">
+    <p>Datos: <a href="https://www.datos.gov.co" target="_blank" rel="noopener">datos.gov.co</a>, portal de datos abiertos del Estado colombiano (MinTIC), con la licencia que indica cada entidad.</p>
+    <p>Adaptado de <a href="https://github.com/datagouv/datagouv-mcp" target="_blank" rel="noopener">datagouv-mcp</a> de la DINUM de Francia (licencia MIT). Código abierto en <a href="https://github.com/Estado-X/datos-abiertos-colombia" target="_blank" rel="noopener">GitHub</a>.</p>
+    <p class="firma">Hecho por <a href="https://estadox.com" target="_blank" rel="noopener">Estado <em>X</em></a></p>
+  </div>
+</footer>
+<script src="assets/buscador.js"></script>
+</body>
+</html>
