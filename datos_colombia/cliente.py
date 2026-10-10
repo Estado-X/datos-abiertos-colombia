@@ -10,9 +10,10 @@ datagouv-mcp. Usa cuatro servicios públicos, sin clave:
 """
 
 import logging
+import math
 import re
 import unicodedata
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta, timezone
 from typing import Any
 
 import niquests
@@ -25,6 +26,8 @@ logger = logging.getLogger(NOMBRE_PRINCIPAL)
 PATRON_ID = re.compile(r"^[a-z0-9]{4}-[a-z0-9]{4}$")
 ORDENES = {"relevancia": None, "vistas": "page_views_total", "recientes": "updatedAt"}
 TIEMPO = 25.0
+# Colombia no tiene horario de verano: UTC−5 todo el año (sin depender de tzdata en Windows)
+BOGOTA = timezone(timedelta(hours=-5), "America/Bogota")
 
 
 class ErrorDatos(Exception):
@@ -34,9 +37,10 @@ class ErrorDatos(Exception):
 def validar_id(conjunto_id: str) -> str:
     cid = (conjunto_id or "").strip().lower()
     # Acepta también un enlace completo de datos.gov.co
-    m = re.search(r"(?<![a-z0-9-])([a-z0-9]{4}-[a-z0-9]{4})(?:[/?.#]|$)", cid)
-    if m:
-        cid = m.group(1)
+    # (si hay varios segmentos con esa forma, el identificador es el último)
+    hallados = re.findall(r"(?<![a-z0-9-])([a-z0-9]{4}-[a-z0-9]{4})(?=[/?.#]|$)", cid)
+    if hallados:
+        cid = hallados[-1]
     if not PATRON_ID.match(cid):
         raise ErrorDatos(
             f"«{conjunto_id}» no es un identificador de datos.gov.co. "
@@ -62,14 +66,17 @@ def numero(n: Any) -> str:
         x = float(n)
     except (TypeError, ValueError):
         return str(n)
+    if not math.isfinite(x):
+        return str(n)
     if x.is_integer():
         return f"{int(x):,}".replace(",", ".")
     entero, dec = f"{x:,.2f}".split(".")
-    return entero.replace(",", ".") + "," + dec.rstrip("0")
+    dec = dec.rstrip("0")
+    return entero.replace(",", ".") + ("," + dec if dec else "")
 
 
 def fecha(valor: Any) -> str:
-    """ISO 8601 o segundos desde 1970 -> dd/mm/aaaa"""
+    """ISO 8601 o segundos desde 1970 -> dd/mm/aaaa, en hora de Colombia"""
     if valor in (None, ""):
         return "sin dato"
     try:
@@ -77,6 +84,8 @@ def fecha(valor: Any) -> str:
             d = datetime.fromtimestamp(valor, tz=UTC)
         else:
             d = datetime.fromisoformat(str(valor))
+        if d.tzinfo is not None:
+            d = d.astimezone(BOGOTA)
         return d.strftime("%d/%m/%Y")
     except (ValueError, OverflowError, OSError):
         return str(valor)
@@ -115,8 +124,16 @@ async def _obtener(url: str, params: dict[str, Any] | None = None) -> Any:
             raise ErrorDatos(
                 f"datos.gov.co respondió con un error temporal ({resp.status_code}). Intenta de nuevo."
             )
-        resp.raise_for_status()
-        return resp.json()
+        if resp.status_code >= 400:
+            raise ErrorDatos(
+                f"datos.gov.co no permitió la consulta ({resp.status_code}). Revisa el identificador o intenta más tarde."
+            )
+        try:
+            return resp.json()
+        except ValueError as exc:
+            raise ErrorDatos(
+                "datos.gov.co respondió algo que no son datos (posible mantenimiento). Intenta de nuevo."
+            ) from exc
 
 
 async def buscar_catalogo(

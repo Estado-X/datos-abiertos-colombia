@@ -1,4 +1,4 @@
-/* Estado X · carril editorial (marfil) con la banda de color del banner de LinkedIn.
+/* Estado X · carril editorial (marfil) con la banda de color de la marca.
    Tokens tomados del design system de Estado X. */
 :root {
   --oliva: #73704f; --oliva-700: #565442; --oliva-300: #a9a688; --oliva-100: #d9d6c4;
@@ -20,7 +20,8 @@
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--marfil); color: var(--tinta); font: 16px/1.55 var(--sans); }
 a { color: var(--oliva-700); text-underline-offset: 2px; }
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #b2b0bc; outline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, pre:focus-visible { outline: 3px solid var(--vino); outline-offset: 2px; }
+.banda a:focus-visible, .banda button:focus-visible, .banda select:focus-visible, .pie a:focus-visible { outline-color: var(--cadmio); }
 .contenedor { max-width: 1200px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left)); }
 
 /* Banda superior con los colores del banner */

@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import sys
+import time
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 
@@ -82,9 +83,16 @@ async def chequeo_de_salud(mcp: FastMCP) -> bool:
 def app_http(mcp: FastMCP):
     interna = mcp.streamable_http_app()
 
+    cache = {"ok": False, "hasta": 0.0}
+
     async def app(scope, receive, send: Callable[[dict], Awaitable[None]]):
         if scope["type"] == "http" and scope.get("path") == "/health":
-            ok = await chequeo_de_salud(mcp)
+            # Se guarda el resultado 30 segundos para no consultar datos.gov.co en cada chequeo
+            ahora = time.monotonic()
+            if ahora >= cache["hasta"]:
+                cache["ok"] = await chequeo_de_salud(mcp)
+                cache["hasta"] = ahora + 30
+            ok = cache["ok"]
             cuerpo = json.dumps(
                 {
                     "status": "ok",

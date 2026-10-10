@@ -1,6 +1,6 @@
 [project]
 name = "datos-abiertos-colombia"
-dynamic = ["version"]
+version = "0.1.0"
 description = "Conector MCP para buscar y consultar los datos abiertos de Colombia (datos.gov.co). Adaptado de datagouv-mcp."
 authors = [{ name = "Estado X" }, { name = "data.gouv.fr (proyecto original)", email = "opendatateam@data.gouv.fr" }]
 readme = "README.md"
@@ -16,7 +16,7 @@ dependencies = [
 datos-abiertos-colombia = "datos_colombia.servidor:run"
 
 [build-system]
-requires = ["setuptools>=77.0", "setuptools-scm>=8.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -28,9 +28,6 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "ruff>=0.14.0",
 ]
-
-[tool.setuptools_scm]
-fallback_version = "0.1.0"
 
 [tool.ruff.lint]
 extend-select = ["I"]

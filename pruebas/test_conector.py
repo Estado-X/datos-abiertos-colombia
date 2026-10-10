@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 
 from datos_colombia import cliente
 from datos_colombia.cliente import ErrorDatos, fecha, numero, validar_id
@@ -74,6 +75,23 @@ def test_validar_id(entrada, esperado):
 def test_validar_id_rechaza(malo):
     with pytest.raises(ErrorDatos):
         validar_id(malo)
+
+
+def test_validar_id_toma_el_ultimo_segmento():
+    assert (
+        validar_id("https://www.datos.gov.co/Salud/Agua-Para/abcd-1234") == "abcd-1234"
+    )
+
+
+def test_numero_sin_coma_colgando():
+    assert numero(1234.999) == "1.235"
+    assert numero(0.004) == "0"
+    assert numero("nan") == "nan"
+
+
+def test_fecha_en_hora_de_colombia():
+    # 03:00 UTC del 11 de octubre son las 10:00 p. m. del 10 de octubre en Bogotá
+    assert fecha("2026-10-11T03:00:00.000Z") == "10/10/2026"
 
 
 def test_validar_id_devuelve_solo_el_id_limpio():
@@ -201,10 +219,10 @@ async def test_error_de_consulta_se_explica(mcp, monkeypatch):
         raise ErrorDatos("datos.gov.co rechazó la consulta. Detalle: type-mismatch")
 
     monkeypatch.setattr(cliente, "_obtener", falso)
-    texto = await llamar(
-        mcp, "consultar_datos", {"conjunto_id": "jbjy-vk9h", "filtro": "x > 'a'"}
-    )
-    assert texto.startswith("Error: datos.gov.co rechazó la consulta")
+    with pytest.raises(ToolError, match="datos.gov.co rechazó la consulta"):
+        await llamar(
+            mcp, "consultar_datos", {"conjunto_id": "jbjy-vk9h", "filtro": "x > 'a'"}
+        )
 
 
 # ---------- En vivo (pytest -m en_vivo) ----------

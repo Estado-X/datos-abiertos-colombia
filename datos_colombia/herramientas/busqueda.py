@@ -4,6 +4,7 @@ Reemplazan a search_datasets y search_organizations de datagouv-mcp (Estado X, 2
 """
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 
 from datos_colombia import cliente
 from datos_colombia.cliente import ErrorDatos, fecha, numero, sin_tildes
@@ -56,6 +57,8 @@ def registrar(mcp: FastMCP) -> None:
 
         Flujo típico: buscar_conjuntos → ver_conjunto → consultar_datos o contar_por.
         """
+        por_pagina = max(1, min(int(por_pagina), 50))
+        pagina = max(1, int(pagina))
         try:
             limpia = limpiar_consulta(consulta) or consulta
             r = await cliente.buscar_catalogo(
@@ -68,7 +71,7 @@ def registrar(mcp: FastMCP) -> None:
                 )
                 resultados = r.get("results", [])
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
 
         if not resultados:
             filtros = ", ".join(
@@ -129,7 +132,7 @@ def registrar(mcp: FastMCP) -> None:
         try:
             datos = await cliente.facetas(texto)
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
         nombres = next(
             (
                 f.get("values", [])
@@ -173,7 +176,7 @@ def registrar(mcp: FastMCP) -> None:
         try:
             datos = await cliente.facetas()
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
         cats = next(
             (f.get("values", []) for f in datos if f.get("facet") == "categories"), []
         )

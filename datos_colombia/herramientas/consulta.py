@@ -7,6 +7,7 @@ Reemplazan a query_resource_data (Tabular API de data.gouv.fr) de datagouv-mcp
 import re
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 
 from datos_colombia import cliente
 from datos_colombia.cliente import ErrorDatos, numero
@@ -64,7 +65,7 @@ def registrar(mcp: FastMCP) -> None:
             filas = await cliente.consultar(conjunto_id, soql)
             url = cliente.url_consulta(conjunto_id, soql)
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
         total = await cliente.contar_filas(conjunto_id, filtro) if not texto else None
 
         partes = []
@@ -118,7 +119,7 @@ def registrar(mcp: FastMCP) -> None:
             grupos = await cliente.consultar(conjunto_id, soql)
             url = cliente.url_consulta(conjunto_id, soql)
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
         if not grupos:
             return "No hay filas con esa condición."
         for g in grupos:

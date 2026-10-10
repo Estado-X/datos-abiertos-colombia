@@ -10,8 +10,10 @@ Este repositorio es un fork de [datagouv/datagouv-mcp](https://github.com/datago
 | `helpers/logging.py` | `datos_colombia/registro.py` | Sin el envío de eventos a Matomo. Los registros van a stderr, como pide el modo stdio. |
 | `helpers/health_probe.py` | `datos_colombia/servidor.py` (`chequeo_de_salud`) | Prueba una búsqueda real en datos.gov.co. |
 | `helpers/mcp_tool_defaults.py` | `datos_colombia/herramientas/_comun.py` | Mismas marcas de solo lectura. |
-| `Dockerfile`, `docker-compose.yml` | Mismo nombre | Arrancan el modo HTTP; el puerto se publica solo en `127.0.0.1`; sin variables de Matomo. |
-| `pyproject.toml`, `uv.lock` | Mismo nombre | Paquete `datos-abiertos-colombia` con el comando `datos-abiertos-colombia`. Se quitan `sentry-sdk` y `pyyaml`. |
+| `helpers/env_config.py`, `helpers/user_agent.py` | `datos_colombia/config.py` | Direcciones fijas de datos.gov.co (ya no hay entornos demo/prod), identificación del conector y token opcional de Socrata. |
+| `.env.example` | Mismo nombre | Salen `MCP_ENV`, `DATAGOUV_API_ENV`, `URLS_ALLOW_LOCAL`, `URLS_ALLOW_PRIVATE` y las variables de Matomo y Sentry. Entran `MCP_HOSTS_PERMITIDOS` y `SOCRATA_APP_TOKEN`. `MCP_HOST` pasa a `127.0.0.1` por defecto. |
+| `Dockerfile`, `docker-compose.yml` | Mismo nombre | Arrancan el modo HTTP con `datos-abiertos-colombia --http --host 0.0.0.0` dentro del contenedor; en `docker-compose.yml` el puerto se publica solo en `127.0.0.1` del equipo; sin variables de Matomo. |
+| `pyproject.toml`, `uv.lock` | Mismo nombre | Paquete `datos-abiertos-colombia`, versión fija `0.1.0` (sin `setuptools-scm`), `license = "MIT"` y el comando `datos-abiertos-colombia` (`[project.scripts]`). Se agrega `uvicorn` como dependencia explícita. Se quitan `sentry-sdk` y `pyyaml`, y de las de desarrollo `niquests-mock` y `ty`. |
 | `.gitignore`, `.pre-commit-config.yaml` | Sin cambios | |
 | `LICENSE` | Se agrega «Copyright (c) 2026 Estado X» | El texto y el aviso de la DINUM no cambian. |
 
@@ -23,7 +25,7 @@ Este repositorio es un fork de [datagouv/datagouv-mcp](https://github.com/datago
 | `search_datasets`, `search_organizations` | `buscar_conjuntos`, `buscar_entidades`, `ver_categorias` |
 | `get_dataset_info`, `list_dataset_resources`, `get_resource_info` | `ver_conjunto` (en datos.gov.co cada conjunto es una sola tabla) |
 | `query_resource_data` | `consultar_datos` y `contar_por` (agrupaciones calculadas por el servidor de datos.gov.co) |
-| Pruebas en `tests/` (contra las API francesas) | `pruebas/`: 21 sin internet, con respuestas reales guardadas, y una en vivo (`-m en_vivo`) |
+| Pruebas en `tests/` (contra las API francesas) | `pruebas/`: 24 sin internet, con respuestas reales guardadas, y una en vivo (`-m en_vivo`) |
 
 ## Qué se quitó
 
@@ -36,6 +38,8 @@ Este repositorio es un fork de [datagouv/datagouv-mcp](https://github.com/datago
 
 ## Qué se agregó
 
+- Errores claros en español: si datos.gov.co rechaza una consulta, no responde o devuelve algo que no son datos, la herramienta falla con un mensaje que dice qué revisar.
+- Fechas en hora de Colombia (UTC−5) y números con punto de miles y coma decimal.
 - `docs/`: buscador web estático (GitHub Pages) con muestra de filas y el botón «Llévalo a tu IA».
 - `README.md` en español y en inglés. El original quedó en `README.original.md` y su historial de versiones en `CHANGELOG.original.md`.
 - Este archivo.

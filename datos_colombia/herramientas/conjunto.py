@@ -5,6 +5,7 @@ datagouv-mcp: en datos.gov.co cada conjunto es una sola tabla (Estado X, 2026).
 """
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 
 from datos_colombia import cliente, config
 from datos_colombia.cliente import ErrorDatos, fecha, numero
@@ -44,7 +45,7 @@ def registrar(mcp: FastMCP) -> None:
         try:
             m = await cliente.metadatos(conjunto_id)
         except ErrorDatos as e:
-            return f"Error: {e}"
+            raise ToolError(str(e)) from e
         cid = m.get("id") or cliente.validar_id(conjunto_id)
         custom = (m.get("metadata") or {}).get("custom_fields") or {}
         info_datos = custom.get("Información de Datos") or {}

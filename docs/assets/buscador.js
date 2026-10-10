@@ -15,13 +15,17 @@
 
   // ---------- Formato ----------
   const miles = (n) => String(Math.round(Number(n) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  // Fecha en hora de Colombia (UTC−5 todo el año). Si no es una fecha válida, no se muestra.
   function fecha(v) {
     if (!v) return "sin dato";
     const d = typeof v === "number" ? new Date(v * 1000) : new Date(v);
-    if (isNaN(d)) return String(v);
-    const dd = String(d.getUTCDate()).padStart(2, "0"), mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-    return `${dd}/${mm}/${d.getUTCFullYear()}`;
+    if (isNaN(d)) return "sin dato";
+    const c = new Date(d.getTime() - 5 * 3600 * 1000);
+    const dd = String(c.getUTCDate()).padStart(2, "0"), mm = String(c.getUTCMonth() + 1).padStart(2, "0");
+    return `${dd}/${mm}/${c.getUTCFullYear()}`;
   }
+  // Identificador de datos.gov.co: solo se aceptan los que tienen la forma abcd-1234
+  const ID_VALIDO = /^[a-z0-9]{4}-[a-z0-9]{4}$/;
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const recortar = (s, n) => { const t = String(s || "").replace(/\s+/g, " ").trim(); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
   const TIPOS = { text: "texto", number: "número", calendar_date: "fecha", floating_timestamp: "fecha", checkbox: "sí/no", url: "enlace", point: "punto", location: "ubicación", multipolygon: "polígonos", money: "dinero", percent: "porcentaje" };
@@ -66,6 +70,7 @@
   // ---------- Vista ----------
   function tarjeta(item) {
     const r = item.resource, c = item.classification || {};
+    const idu = encodeURIComponent(r.id);
     const vistas = r.page_views ? r.page_views.page_views_total : null;
     const el = document.createElement("article");
     el.className = "conjunto";
@@ -73,14 +78,14 @@
       <h3>${esc(r.name)}</h3>
       <p class="meta"><span><b>${esc(r.attribution || "Entidad sin dato")}</b></span>
         ${c.domain_category ? `<span>${esc(c.domain_category)}</span>` : ""}
-        <span>Datos al ${fecha(r.data_updated_at || r.updatedAt)}</span>
+        <span>Datos al ${esc(fecha(r.data_updated_at || r.updatedAt))}</span>
         ${vistas != null ? `<span>${miles(vistas)} vistas</span>` : ""}
         <span>ID ${esc(r.id)}</span></p>
       ${r.description ? `<p class="desc">${esc(recortar(r.description, 260))}</p>` : ""}
       <div class="acciones">
         <button type="button" class="boton boton--chico" data-accion="detalle" aria-expanded="false">Ver columnas y muestra</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="llevar">Llévalo a tu IA</button>
-        <a class="boton boton--chico boton--claro" href="${SITIO}/d/${encodeURIComponent(r.id)}" target="_blank" rel="noopener">Abrir en datos.gov.co</a>
+        <a class="boton boton--chico boton--claro" href="${SITIO}/d/${idu}" target="_blank" rel="noopener">Abrir en datos.gov.co</a>
         <span class="copiado" role="status" hidden></span>
       </div>
       <div class="detalle" hidden></div>`;
@@ -126,7 +131,7 @@
         <div class="chips">${cols.map((c) => `<code title="${esc(c.name)}">${esc(c.fieldName)} · ${esc(TIPOS[c.dataTypeName] || c.dataTypeName)}</code>`).join("")}</div>
         ${f && f.length ? `<div class="tabla-scroll"><table class="muestra"><thead><tr>${vis.map((k) => `<th>${esc(k)}</th>`).join("")}</tr></thead>
         <tbody>${f.map((row) => `<tr>${vis.map((k) => `<td>${esc(recortar(celda(row[k], tipoDe[k]), 60))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-        <p class="nota">Muestra de 5 filas${cols.length > 8 ? " y las primeras 8 columnas" : ""}. Descarga completa: <a href="${SITIO}/api/views/${r.id}/rows.csv?accessType=DOWNLOAD" rel="noopener">CSV</a> · API: <a href="${SITIO}/resource/${r.id}.json" target="_blank" rel="noopener">${DOMINIO}/resource/${esc(r.id)}.json</a></p>` : '<p class="nota">Este conjunto no devolvió filas para la muestra.</p>'}`;
+        <p class="nota">Muestra de 5 filas${cols.length > 8 ? " y las primeras 8 columnas" : ""}. Descarga completa: <a href="${SITIO}/api/views/${encodeURIComponent(r.id)}/rows.csv?accessType=DOWNLOAD" rel="noopener">CSV</a> · API: <a href="${SITIO}/resource/${encodeURIComponent(r.id)}.json" target="_blank" rel="noopener">${DOMINIO}/resource/${esc(r.id)}.json</a></p>` : '<p class="nota">Este conjunto no devolvió filas para la muestra.</p>'}`;
       caja.dataset.listo = "1";
       el._meta = m; el._total = total;
     } catch (e) {
@@ -179,9 +184,10 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
       const total = r.resultSetSize || 0;
       const titulo = params.q ? `${miles(total)} conjuntos de datos para «${params.q}»` : `${miles(total)} conjuntos de datos${params.categoria ? " en " + params.categoria : ""}, los más consultados primero`;
       $("estado").textContent = (r.respaldo ? "Vista previa sin conexión: " : "") + titulo + (total ? "." : ". Prueba con menos palabras o sin categoría.");
-      r.results.forEach((x) => $("resultados").appendChild(tarjeta(x)));
+      r.results.filter((x) => x && x.resource && ID_VALIDO.test(String(x.resource.id))).forEach((x) => $("resultados").appendChild(tarjeta(x)));
       $("mas").hidden = r.respaldo || pagina * POR_PAGINA >= total;
     } catch (e) {
+      if (!nueva && pagina > 1) pagina -= 1;
       $("estado").textContent = "datos.gov.co no respondió. Revisa tu conexión e intenta de nuevo.";
     }
   }
