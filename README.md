@@ -95,7 +95,7 @@ Queda en `http://localhost:8000/mcp`, con chequeo en `/health`. Por seguridad so
 
 Adaptado de **[datagouv-mcp](https://github.com/datagouv/datagouv-mcp)**, el conector de la Dirección Interministerial de lo Digital de Francia (DINUM) para data.gouv.fr (licencia MIT). Se conservan su estructura de servidor, sus protecciones contra *DNS rebinding*, el chequeo de salud y el empaque con Docker. Los clientes de datos, las herramientas y el buscador web son nuevos. El detalle está en [CAMBIOS.md](CAMBIOS.md). El README original está en [README.original.md](README.original.md).
 
-Datos: [datos.gov.co](https://www.datos.gov.co), portal de datos abiertos del Estado colombiano (MinTIC), con la licencia que indica cada entidad. Plataforma: Socrata (Tyler Technologies). Bibliotecas: [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk), [niquests](https://github.com/jawah/niquests) y [Uvicorn](https://www.uvicorn.org). Tipografía de acento: [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) (SIL Open Font License).
+Datos: [datos.gov.co](https://www.datos.gov.co), portal de datos abiertos del Estado colombiano (MinTIC), con la licencia que indica cada entidad. Plataforma: Socrata (Tyler Technologies). Bibliotecas: [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk), [niquests](https://github.com/jawah/niquests) y [Uvicorn](https://www.uvicorn.org).
 
 Hecho por **[Estado X](https://estadox.com)** · Licencia MIT (la del proyecto original; ver [LICENSE](LICENSE)).
 
