@@ -2,6 +2,24 @@
 
 Este repositorio es un fork de [datagouv/datagouv-mcp](https://github.com/datagouv/datagouv-mcp) (licencia MIT, © 2025 DINUM), adaptado por Estado X en 2026 al portal de datos abiertos de Colombia. Se adaptó desde el commit `5a37d6f0f1da` (8 sep 2026). No se sincroniza con el original.
 
+## Versión 2
+
+Construida por Estado X en noviembre de 2026 (versión 0.2.0 del paquete). Nada de esto viene del original.
+
+- **¿Qué hay de mi municipio?** Selector de departamento y municipio con la DIVIPOLA del DANE (`docs/assets/divipola.json`, conjunto `gdxc-w37w`, regenerable con `herramientas/actualizar_divipola.py`) y tres preguntas listas (`docs/assets/preguntas.js`):
+  - contratos firmados en los últimos 12 meses por entidades con sede en el municipio (SECOP II, `jbjy-vk9h`), con aviso cuando un solo contrato pesa más de la mitad de la suma;
+  - cobertura neta y deserción escolar del último año publicado (Ministerio de Educación, `nudc-7mev`);
+  - hurtos a personas en los 12 meses que terminan en la fecha de corte del conjunto (MinDefensa, `4rxi-8m8d`).
+  Cada columna se busca por varios nombres posibles: si datos.gov.co cambia uno y ninguno aparece, la pregunta se pausa con un aviso y la página sigue funcionando.
+- **Columnas legibles:** nombre, tipo y descripción de cada columna, con el nombre técnico en pequeño; 12 a la vista y el resto con «Ver las N columnas». La muestra usa los nombres legibles.
+- **Carga clara:** barra de carga, aviso cuando datos.gov.co tarda, límite de espera y «Reintentar».
+- **«Llévatelo a Excel»:** hasta 5.000 filas armadas en el navegador, en un CSV para Excel en español (BOM, punto y coma, coma decimal). Las celdas que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno se escriben con un apóstrofo delante, para que ninguna se ejecute como fórmula.
+- **Instalar sin terminal:** paquete `docs/descargas/datos-abiertos-colombia.mcpb` para Claude Desktop (MCPB de tipo `uv`, `mcpb/manifest.json`), armado por `herramientas/armar_mcpb.py`.
+- **Colaborar:** `CONTRIBUTING.md`, plantillas de *issue* en `.github/ISSUE_TEMPLATE/` y sección «Cómo colaborar» en el README y en la página.
+- **Diseño:** títulos livianos con la pila de letras del sistema (la página no incrusta letras con licencia), palabra destacada en cobre claro y sin cursiva, pocas tarjetas.
+- **Pruebas:** `pruebas/js/` (Node, sin dependencias) para la lógica de la página, y `pruebas/test_mcpb.py` para el paquete.
+- **Seguridad:** `.gitignore` con el bloque base de Estado X y `.gitattributes` para los binarios.
+
 ## Qué se conservó (adaptado)
 
 | Original | Ahora | Cambio |
