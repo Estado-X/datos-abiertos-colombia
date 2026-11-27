@@ -1,0 +1,146 @@
+# Abre la versión 2 de Datos abiertos de Colombia: une la rama v2 a main una sola vez.
+#
+# Cuándo: la noche antes del post del lunes 4 ene 2027 (3:00 p. m.; el viernes 1 es Año Nuevo),
+# con tres intentos en hora de Bogotá (UTC−5): dom 3 ene 11:17 p. m., lun 4 ene 2:17 a. m.
+# y 5:17 a. m.
+#
+# Seguro de fecha (el reloj de GitHub no sabe de años y sus tareas programadas suelen
+# arrancar entre 6 y 14 horas tarde):
+#   - Solo une entre el dom 3 ene a las 11:00 p. m. y el lun 4 ene a las 3:00 p. m., la hora
+#     del post. Vale para los intentos programados y para «Run workflow» en modo «unir».
+#   - Si la versión 2 ya está en main, no hace nada más que comprobar la página (en verde).
+#   - Si corre fuera de la ventana y la versión 2 NO está en main, termina en ROJO y no une:
+#     así llega el correo de fallo de GitHub y alguien lo revisa. Para unir fuera de la ventana
+#     hay que correrlo a mano en modo «unir» y marcar «fuera_de_fecha».
+#   - Modo «prueba» (el que viene marcado en «Run workflow»): ensaya la unión en la máquina de
+#     GitHub, sin subir nada, y dice si chocaría. Sirve para comprobar antes del 4 ene que este
+#     fork sí corre flujos.
+#
+# Qué hace en modo «unir»: une v2 con git merge --no-ff (sin forzar: si hay choque, falla en rojo
+# y no toca main), espera a que la página en vivo muestre <meta name="version" content="2"> (si a
+# los 5 minutos no aparece, le pide a GitHub Pages que vuelva a publicar) y, cuando la ve, se
+# apaga sola.
+#
+# Este repo es un fork de datagouv-mcp: el flujo trabaja solo sobre Estado-X/datos-abiertos-colombia,
+# nunca abre pull requests ni toca el repositorio original. Solo usa acciones de GitHub.
+# No borra la rama v2.
+name: Abrir la versión 2
+
+on:
+  schedule:
+    - cron: "17 4 4 1 *"    # dom 3 ene, 11:17 p. m. Bogotá
+    - cron: "17 7 4 1 *"    # lun 4 ene, 2:17 a. m. Bogotá
+    - cron: "17 10 4 1 *"   # lun 4 ene, 5:17 a. m. Bogotá
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "prueba = ensaya sin subir nada · unir = une v2 a main"
+        type: choice
+        options: [prueba, unir]
+        default: prueba
+      fuera_de_fecha:
+        description: "Unir aunque sea fuera de la ventana (solo si la sesión principal o Juan lo decidieron)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # unir y subir a main
+  pages: write      # pedir a GitHub Pages que vuelva a publicar si se atasca
+  actions: write    # apagar este flujo al terminar
+
+concurrency:
+  group: abrir-v2
+  cancel-in-progress: false
+
+env:
+  PAGINA: https://estado-x.github.io/datos-abiertos-colombia/
+  DESDE_UTC: "2027-01-04T04:00:00Z"   # dom 3 ene 2027, 11:00 p. m. Bogotá
+  HASTA_UTC: "2027-01-04T20:00:00Z"   # lun 4 ene 2027, 3:00 p. m. Bogotá (hora del post)
+
+jobs:
+  abrir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Traer main y v2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Decidir qué hacer
+        id: decidir
+        env:
+          EVENTO: ${{ github.event_name }}
+          MODO: ${{ github.event_name == 'workflow_dispatch' && inputs.modo || 'unir' }}
+          FUERA: ${{ github.event_name == 'workflow_dispatch' && inputs.fuera_de_fecha }}
+        run: |
+          echo "Ahora en Bogotá: $(TZ='<-05>5' date '+%Y-%m-%d %H:%M') · evento: $EVENTO · modo: $MODO"
+          echo "modo=$MODO" >> "$GITHUB_OUTPUT"
+          git fetch origin v2:refs/remotes/origin/v2
+          if git merge-base --is-ancestor origin/v2 HEAD; then
+            echo "::notice::La versión 2 ya está en main. No hay nada que unir."
+            echo "accion=comprobar" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$MODO" = "prueba" ]; then
+            echo "Modo prueba: se ensaya la unión sin subir nada."
+            echo "accion=ensayar" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          ahora=$(date -u +%s)
+          desde=$(date -u -d "$DESDE_UTC" +%s)
+          hasta=$(date -u -d "$HASTA_UTC" +%s)
+          if [ "$ahora" -ge "$desde" ] && [ "$ahora" -le "$hasta" ]; then
+            echo "accion=unir" >> "$GITHUB_OUTPUT"
+          elif [ "$FUERA" = "true" ]; then
+            echo "::warning::Fuera de la ventana, pero se pidió unir a mano con «fuera_de_fecha»."
+            echo "accion=unir" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Fuera de la ventana (dom 3 ene 11:00 p. m. a lun 4 ene 3:00 p. m., Bogotá) y la versión 2 no está en main. No se unió nada. Para unir ahora: Run workflow, modo «unir», con «fuera_de_fecha»."
+            exit 1
+          fi
+
+      - name: Unir v2 a main
+        if: steps.decidir.outputs.accion == 'unir' || steps.decidir.outputs.accion == 'ensayar'
+        env:
+          ACCION: ${{ steps.decidir.outputs.accion }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git merge --no-ff origin/v2 -m "Versión 2" -m "Unión programada de la rama v2 (abrir-v2.yml)."; then
+            git merge --abort || true
+            echo "::error::La rama v2 choca con main. No se tocó main: hay que revisarlo a mano."
+            exit 1
+          fi
+          if [ "$ACCION" = "ensayar" ]; then
+            echo "::notice::Prueba lista: v2 se une a main sin choques ($(git rev-list --count HEAD^1..HEAD^2) commits). No se subió nada."
+            exit 0
+          fi
+          git push origin HEAD:main
+
+      - name: Comprobar la página en vivo
+        if: steps.decidir.outputs.accion == 'unir' || (steps.decidir.outputs.accion == 'comprobar' && steps.decidir.outputs.modo == 'unir')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 45); do
+            if curl -fsSL "$PAGINA?v=$(date +%s)" | grep -Eq 'name="version"[[:space:]]+content="2"'; then
+              echo "La página en vivo ya muestra la versión 2."
+              exit 0
+            fi
+            if [ "$i" -eq 15 ]; then
+              echo "A los 5 minutos no aparece: le pido a GitHub Pages que vuelva a publicar."
+              gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" || echo "::warning::No se pudo pedir la publicación a GitHub Pages."
+            fi
+            echo "Todavía no aparece la versión 2 (intento $i de 45). Espero 20 segundos."
+            sleep 20
+          done
+          echo "::error::La página en vivo no mostró la versión 2 en 15 minutos. Revisa Settings → Pages."
+          exit 1
+
+      - name: Apagar este flujo
+        if: steps.decidir.outputs.accion == 'unir' || (steps.decidir.outputs.accion == 'comprobar' && steps.decidir.outputs.modo == 'unir')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow disable abrir-v2.yml --repo "$GITHUB_REPOSITORY"
