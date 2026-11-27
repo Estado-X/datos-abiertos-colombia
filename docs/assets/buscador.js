@@ -194,7 +194,7 @@
         <tbody>${f.map((row) => `<tr>${vis.map((c) => `<td>${esc(recortar(celda(row[c.fieldName], c.dataTypeName), 60))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
         <p class="nota">Muestra de 5 filas${cols.length > 8 ? " y las primeras 8 columnas" : ""}.</p>` : '<p class="nota">Este conjunto no devolvió filas para la muestra.</p>'}
         <div class="acciones">
-          <button type="button" class="boton boton--chico boton--cobre" data-accion="excel">Llévatelo a Excel</button>
+          <button type="button" class="boton boton--chico" data-accion="excel">Llévatelo a Excel</button>
           <button type="button" class="boton boton--chico boton--claro" data-accion="enlace">Copiar enlace de la consulta</button>
           <span class="copiado" role="status" hidden></span>
         </div>
@@ -362,7 +362,7 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
       ${fuente}
       <details class="pregunta__nota"><summary>Cómo leer esta cifra</summary><p>${esc(p.nota)}</p></details>
       <div class="acciones">
-        <button type="button" class="boton boton--chico boton--cobre" data-accion="excel">Llévatelo a Excel</button>
+        <button type="button" class="boton boton--chico" data-accion="excel">Llévatelo a Excel</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="ia">Llévalo a tu IA</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="consulta">Copiar la consulta</button>
         <span class="copiado" role="status" hidden></span>
