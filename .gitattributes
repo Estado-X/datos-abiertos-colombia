@@ -1,0 +1,3 @@
+# Archivos binarios: git no les cambia los saltos de línea
+*.mcpb binary
+*.png binary

@@ -1,0 +1,38 @@
+name: Propón una pregunta para tu municipio
+description: Sugiere un conjunto de datos.gov.co para la sección «¿Qué hay de mi municipio?». No necesitas programar.
+title: "Pregunta para el municipio: "
+labels: ["pregunta del municipio"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por proponer. Una buena pregunta usa un conjunto **nacional** (que traiga todos los municipios), que se actualice y que no tenga datos de personas.
+  - type: input
+    id: pregunta
+    attributes:
+      label: La pregunta
+      description: En palabras sencillas, como la leería cualquier persona.
+      placeholder: "Ej.: ¿Cuántos casos de dengue hubo en mi municipio este año?"
+    validations:
+      required: true
+  - type: input
+    id: conjunto
+    attributes:
+      label: Conjunto de datos.gov.co
+      description: El enlace o el ID (tiene la forma abcd-1234).
+      placeholder: https://www.datos.gov.co/d/abcd-1234
+    validations:
+      required: true
+  - type: input
+    id: columna
+    attributes:
+      label: Columna que dice el lugar
+      description: Mejor si es el código DANE del municipio (5 dígitos). Si no sabes, déjalo en blanco.
+      placeholder: "Ej.: cod_muni"
+  - type: textarea
+    id: para-que
+    attributes:
+      label: ¿Para qué le sirve a alguien?
+      description: Quién la usaría y qué decidiría con ella.
+    validations:
+      required: true

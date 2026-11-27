@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Página del buscador
+    url: https://estado-x.github.io/datos-abiertos-colombia/
+    about: Prueba el buscador y «¿Qué hay de mi municipio?» antes de reportar.

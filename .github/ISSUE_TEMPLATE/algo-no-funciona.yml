@@ -1,0 +1,31 @@
+name: Algo no funciona
+description: Cuéntanos qué falló en la página o en el conector.
+title: "No funciona: "
+labels: ["algo no funciona"]
+body:
+  - type: dropdown
+    id: donde
+    attributes:
+      label: ¿Dónde?
+      options:
+        - La página (buscador, municipio o Excel)
+        - El conector en Claude Desktop
+        - El conector en Claude Code u otra IA
+        - Otro
+    validations:
+      required: true
+  - type: textarea
+    id: que-paso
+    attributes:
+      label: ¿Qué hiciste y qué pasó?
+      description: Qué esperabas y qué viste. Incluye el municipio o el conjunto que probaste. Una captura ayuda mucho.
+    validations:
+      required: true
+  - type: input
+    id: equipo
+    attributes:
+      label: Navegador o programa, y sistema
+      placeholder: "Ej.: Chrome en Android, Claude Desktop en Windows 11"
+  - type: markdown
+    attributes:
+      value: "No pegues llaves, contraseñas ni datos personales."

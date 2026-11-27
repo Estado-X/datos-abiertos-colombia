@@ -1,0 +1,32 @@
+name: Probé el conector en otra IA
+description: Cuéntanos cómo te fue con LM Studio, Jan, Open WebUI, Cursor u otro programa.
+title: "Conector en: "
+labels: ["otra IA"]
+body:
+  - type: input
+    id: programa
+    attributes:
+      label: Programa y versión
+      placeholder: "Ej.: LM Studio en Windows"
+    validations:
+      required: true
+  - type: dropdown
+    id: resultado
+    attributes:
+      label: ¿Funcionó?
+      options:
+        - Sí, todo
+        - En parte
+        - "No"
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Cómo lo instalaste y qué pasó
+      description: Los pasos que seguiste. Si funcionó, nos sirven para la guía.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "No pegues llaves, contraseñas ni datos personales."
