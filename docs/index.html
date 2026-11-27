@@ -3,23 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="version" content="2">
 <title>Datos abiertos de Colombia · Estado X</title>
-<meta name="description" content="Busca entre los conjuntos de datos de datos.gov.co, mira sus columnas y llévalos a tu IA. Incluye un conector para Claude.">
-<meta property="og:title" content="Datos abiertos de Colombia, a la mano">
-<meta property="og:description" content="Buscador de datos.gov.co con «Llévalo a tu IA» y conector para Claude Desktop y Claude Code.">
+<meta name="description" content="Escoge tu municipio y mira qué dicen los datos públicos, con la cifra y la fuente. Busca en datos.gov.co, llévatelo a Excel o a tu IA, e instala el conector para Claude sin terminal.">
+<meta property="og:title" content="¿Qué hay de mi municipio? Datos abiertos de Colombia, a la mano">
+<meta property="og:description" content="Contratos, educación y seguridad de tu municipio con fuente y fecha. Buscador de datos.gov.co, descarga a Excel y conector para Claude.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/estilos.css">
 </head>
 <body>
+<a class="saltar" href="#t-buscar">Ir al buscador</a>
 <header class="banda">
   <div class="contenedor banda__in">
-    <p class="kicker">Buscador abierto · Estado X</p>
-    <h1>Los datos abiertos de <em>Colombia</em>, a la mano</h1>
-    <p class="banda__sub">Busca en datos.gov.co, mira qué columnas trae cada conjunto y llévalo a tu IA con un clic. Si usas Claude, instala el conector y pregúntale directamente.</p>
+    <p class="kicker">Datos abiertos · Estado X</p>
+    <h1>Los datos abiertos de <span class="destacado">Colombia</span>, a la mano</h1>
+    <p class="banda__sub">Escoge tu municipio y mira qué dicen los datos públicos, con la cifra, la fuente y la fecha. O busca cualquier conjunto de datos.gov.co y llévatelo a Excel o a tu IA.</p>
+    <form class="municipio-form" id="form-municipio" aria-label="¿Qué hay de mi municipio?">
+      <label>Departamento<select id="depto" required><option value="">Cargando…</option></select></label>
+      <label>Municipio<select id="mpio" required disabled><option value="">Primero el departamento</option></select></label>
+      <button class="boton boton--cobre" type="submit">Ver mi municipio</button>
+    </form>
+    <p class="ejemplos" id="ejemplos">Prueba con
+      <button type="button" class="enlace" data-municipio="25754">Soacha</button>,
+      <button type="button" class="enlace" data-municipio="52001">Pasto</button> o
+      <button type="button" class="enlace" data-municipio="91001">Leticia</button>.</p>
+    <p class="cifra-portal" id="cifra-portal">Conectando con datos.gov.co…</p>
+  </div>
+</header>
+
+<main class="contenedor">
+  <section class="bloque municipio" id="mi-municipio" aria-labelledby="t-mun" hidden>
+    <p class="kicker kicker--oliva">¿Qué hay de mi municipio?</p>
+    <h2 id="t-mun" tabindex="-1">Tu municipio</h2>
+    <p class="ayuda">Tres preguntas listas con datos públicos de datos.gov.co. Cada cifra trae su fuente, su fecha y la consulta para que cualquiera la verifique.</p>
+    <div class="preguntas" id="preguntas"></div>
+    <p class="nota">¿Le falta una pregunta a tu municipio? <a href="https://github.com/Estado-X/datos-abiertos-colombia/issues/new?template=pregunta-municipio.yml" target="_blank" rel="noopener">Propónla en GitHub</a>.</p>
+  </section>
+
+  <section class="bloque" aria-labelledby="t-buscar">
+    <h2 id="t-buscar" tabindex="-1">Busca cualquier conjunto de datos</h2>
     <form class="buscador" id="form" role="search">
       <label class="oculto" for="q">Qué datos buscas</label>
       <input id="q" type="search" placeholder="Ej.: contratos SECOP, dengue, matrícula, accidentes de tránsito" autocomplete="off">
-      <button class="boton boton--cadmio" type="submit">Buscar</button>
+      <button class="boton" type="submit">Buscar</button>
     </form>
     <div class="filtros">
       <label>Categoría<select id="categoria"><option value="">Todas</option></select></label>
@@ -29,31 +55,62 @@
         <option value="recientes">Actualizados hace poco</option>
       </select></label>
     </div>
-    <p class="cifra-portal" id="cifra-portal">Conectando con datos.gov.co…</p>
-  </div>
-</header>
-
-<main class="contenedor">
-  <section class="bloque" aria-labelledby="t-res">
-    <h2 id="t-res">Conjuntos de datos</h2>
     <p class="estado-busqueda" id="estado" aria-live="polite">Cargando los más consultados…</p>
     <div class="resultados" id="resultados"></div>
     <div class="mas"><button class="boton boton--claro" id="mas" type="button" hidden>Ver más resultados</button></div>
   </section>
 
-  <section class="bloque dos" aria-label="Llévalo a tu IA">
-    <div class="tarjeta">
-      <h2>Llévalo a cualquier IA</h2>
-      <p>El botón <strong>«Llévalo a tu IA»</strong> copia un texto con el nombre del conjunto, quién lo publica, la fecha, sus columnas y la dirección para consultarlo. Pégalo en Claude, ChatGPT, Gemini o la que uses, y escribe tu pregunta al final.</p>
-      <p class="nota">Pide siempre que la respuesta cite la entidad, el ID del conjunto y la fecha de actualización.</p>
+  <section class="bloque" aria-labelledby="t-llevar">
+    <h2 id="t-llevar">Llévatelo a Excel o a tu IA</h2>
+    <div class="dos">
+      <div>
+        <h3>Llévatelo a Excel</h3>
+        <p>El botón descarga un archivo que abre directo en Excel, con tildes y coma decimal. Trae hasta 5.000 filas: para todas, usa la descarga completa del portal o el conector.</p>
+        <p class="nota">Las celdas que empiezan con =, +, - o @ se guardan como texto, para que ninguna se ejecute como fórmula al abrir el archivo.</p>
+      </div>
+      <div>
+        <h3>Llévalo a cualquier IA</h3>
+        <p>«Llévalo a tu IA» copia un texto con el nombre del conjunto, quién lo publica, la fecha, sus columnas y la dirección para consultarlo. Pégalo en Claude, ChatGPT, Gemini o la que uses y escribe tu pregunta al final.</p>
+        <p class="nota">Pide siempre que la respuesta cite la entidad, el ID del conjunto y la fecha de actualización.</p>
+      </div>
     </div>
-    <div class="tarjeta">
-      <h2>Conector para Claude</h2>
-      <p>Con el conector, Claude busca, lee y resume los datos por su cuenta. Necesitas <a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a> instalado.</p>
+  </section>
+
+  <section class="bloque" id="instalar" aria-labelledby="t-instalar">
+    <h2 id="t-instalar">Conector para Claude, sin terminal</h2>
+    <p class="ayuda">Con el conector, Claude busca, lee y cuenta los datos de datos.gov.co por su cuenta. Corre en tu computador y solo lee.</p>
+    <ol class="pasos">
+      <li>
+        <span class="pasos__n" aria-hidden="true">1</span>
+        <div>
+          <h3>Descarga el conector</h3>
+          <p><a class="boton boton--cobre" href="descargas/datos-abiertos-colombia.mcpb" download>Descargar para Claude Desktop</a></p>
+          <p class="nota" id="nota-descarga">Archivo .mcpb. Necesitas Claude Desktop actualizado, en Windows o Mac.</p>
+        </div>
+      </li>
+      <li>
+        <span class="pasos__n" aria-hidden="true">2</span>
+        <div>
+          <h3>Ábrelo con Claude Desktop</h3>
+          <p>Haz doble clic en el archivo, o arrástralo a la ventana de Claude Desktop, y pulsa <strong>Instalar</strong>. La primera vez tarda uno o dos minutos mientras Claude Desktop prepara lo que necesita.</p>
+          <p class="nota">Si el doble clic no lo abre: Configuración → Extensiones → Configuración avanzada → Instalar extensión…</p>
+        </div>
+      </li>
+      <li>
+        <span class="pasos__n" aria-hidden="true">3</span>
+        <div>
+          <h3>Pregúntale</h3>
+          <p>Por ejemplo: «¿Cuántos contratos del SECOP II firmó la alcaldía de mi municipio este año y por cuánto?». Claude te pide permiso antes de usar cada herramienta.</p>
+        </div>
+      </li>
+    </ol>
+    <details class="otras">
+      <summary>¿Usas Claude Code u otra IA? Instálalo con un comando</summary>
+      <p>Necesitas <a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a> instalado.</p>
       <p><strong>Claude Code:</strong></p>
-      <pre class="codigo" id="cfg-code" tabindex="0">claude mcp add datos-colombia -- uvx --from git+https://github.com/Estado-X/datos-abiertos-colombia datos-abiertos-colombia</pre>
-      <p><strong>Claude Desktop</strong> (archivo <code>claude_desktop_config.json</code>):</p>
-      <pre class="codigo" id="cfg-desktop" tabindex="0">{
+      <pre class="codigo" tabindex="0">claude mcp add datos-colombia -- uvx --from git+https://github.com/Estado-X/datos-abiertos-colombia datos-abiertos-colombia</pre>
+      <p><strong>Claude Desktop, LM Studio y otras con archivo de configuración</strong> (<code>mcpServers</code>):</p>
+      <pre class="codigo" tabindex="0">{
   "mcpServers": {
     "datos-colombia": {
       "command": "uvx",
@@ -61,29 +118,44 @@
     }
   }
 }</pre>
-      <p class="nota">Más detalles y otras formas de instalarlo en el <a href="https://github.com/Estado-X/datos-abiertos-colombia#readme" target="_blank" rel="noopener">README del repositorio</a>.</p>
+      <p class="nota">Más detalles en el <a href="https://github.com/Estado-X/datos-abiertos-colombia#readme" target="_blank" rel="noopener">README del repositorio</a>.</p>
+    </details>
+  </section>
+
+  <section class="bloque" id="colaborar" aria-labelledby="t-colaborar">
+    <div class="colaborar">
+      <p class="kicker">Cómo colaborar</p>
+      <h2 id="t-colaborar">Esto es abierto y <span class="destacado">gratis</span>: úsalo, cópialo y mejóralo.</h2>
+      <ul class="colaborar__lista">
+        <li><a href="https://github.com/Estado-X/datos-abiertos-colombia/issues/new?template=pregunta-municipio.yml" target="_blank" rel="noopener">Propón una pregunta para tu municipio</a>: un conjunto de datos.gov.co con columna de lugar y para qué le sirve a la gente.</li>
+        <li><a href="https://github.com/Estado-X/datos-abiertos-colombia/issues/new?template=algo-no-funciona.yml" target="_blank" rel="noopener">Cuéntanos si algo no funciona</a>, con el municipio o el conjunto que probaste.</li>
+        <li><a href="https://github.com/Estado-X/datos-abiertos-colombia/issues/new?template=otra-ia.yml" target="_blank" rel="noopener">¿Probaste el conector en otra IA?</a> Cuéntanos cómo te fue.</li>
+        <li><a href="https://github.com/Estado-X/datos-abiertos-colombia/fork" target="_blank" rel="noopener">Cópialo a tu cuenta</a> y adáptalo a tu ciudad o a otro portal de datos.</li>
+      </ul>
+      <p class="colaborar__pie">Todo se hace en GitHub, gratis. La guía para colaborar está en <a href="https://github.com/Estado-X/datos-abiertos-colombia/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a>.</p>
     </div>
   </section>
 
-  <section class="bloque">
-    <div class="tarjeta">
-      <h2>Límites</h2>
-      <ul class="lista">
-        <li>Los datos son de cada entidad que los publica y no están validados aquí: revisa fechas, unidades y valores atípicos antes de sacar conclusiones.</li>
-        <li>El buscador y la muestra se cargan directamente desde datos.gov.co en tu navegador. Si el portal está lento o caído, este buscador también.</li>
-        <li>Muestra solo conjuntos de tipo tabla; los mapas, gráficos y enlaces externos del portal no aparecen.</li>
-      </ul>
-    </div>
+  <section class="bloque" aria-labelledby="t-limites">
+    <h2 id="t-limites">Límites</h2>
+    <ul class="lista">
+      <li>Los datos son de cada entidad que los publica y no están validados aquí: revisa fechas, unidades y valores atípicos antes de sacar conclusiones.</li>
+      <li>Todo se carga directamente desde datos.gov.co en tu navegador. Si el portal está lento o caído, esta página también.</li>
+      <li>Las preguntas del municipio dependen de los nombres de columna que use cada conjunto. Si datos.gov.co los cambia, la pregunta se pone en pausa con un aviso hasta que la ajustemos.</li>
+      <li>Muestra solo conjuntos de tipo tabla; los mapas, gráficos y enlaces externos del portal no aparecen.</li>
+    </ul>
   </section>
 </main>
 
 <footer class="pie">
   <div class="contenedor pie__in">
-    <p>Datos: <a href="https://www.datos.gov.co" target="_blank" rel="noopener">datos.gov.co</a>, portal de datos abiertos del Estado colombiano (MinTIC), con la licencia que indica cada entidad.</p>
+    <p>Datos: <a href="https://www.datos.gov.co" target="_blank" rel="noopener">datos.gov.co</a>, portal de datos abiertos del Estado colombiano (MinTIC), con la licencia que indica cada entidad. Lista de municipios: DIVIPOLA del DANE.</p>
     <p>Adaptado de <a href="https://github.com/datagouv/datagouv-mcp" target="_blank" rel="noopener">datagouv-mcp</a> de la DINUM de Francia (licencia MIT). Código abierto en <a href="https://github.com/Estado-X/datos-abiertos-colombia" target="_blank" rel="noopener">GitHub</a>.</p>
-    <p class="firma">Hecho por <a href="https://estadox.com" target="_blank" rel="noopener">Estado <em>X</em></a></p>
+    <p class="firma">Hecho por <a href="https://estadox.com" target="_blank" rel="noopener">Estado <span class="firma__x">X</span></a></p>
   </div>
 </footer>
+<script src="assets/logica.js"></script>
+<script src="assets/preguntas.js"></script>
 <script src="assets/buscador.js"></script>
 </body>
 </html>
