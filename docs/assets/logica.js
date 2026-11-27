@@ -55,13 +55,20 @@
     }
     return null;
   }
-  /** roles = { lugar: ["cod_muni", "codigo municipio"], ... } -> { ok, campos, tipos, faltan } */
-  function resolverRoles(meta, roles) {
+  // Tipos de columna aceptados para un rol que pide «numero» o «fecha»
+  const CLASES = { numero: NUMERICOS, fecha: FECHAS };
+  /** roles = { lugar: ["cod_muni", "codigo municipio"], ... } y, opcional, esperados = { valor: "numero" }.
+      -> { ok, campos, tipos, faltan }. Una columna que existe pero cambió de tipo también falta:
+      con ella la consulta fallaría (por ejemplo, sumar una columna que pasó a texto). */
+  function resolverRoles(meta, roles, esperados) {
     const cols = columnasVisibles(meta);
     const campos = {}, tipos = {}, faltan = [];
     for (const [rol, candidatos] of Object.entries(roles || {})) {
       const c = resolverColumna(cols, candidatos);
-      if (c) { campos[rol] = c.fieldName; tipos[rol] = c.dataTypeName; } else faltan.push(rol);
+      const clase = esperados && CLASES[esperados[rol]];
+      if (!c) faltan.push(rol);
+      else if (clase && !clase.has(c.dataTypeName)) faltan.push(`${rol} (cambió de tipo: ${tipoLegible(c.dataTypeName)})`);
+      else { campos[rol] = c.fieldName; tipos[rol] = c.dataTypeName; }
     }
     return { ok: faltan.length === 0, campos, tipos, faltan };
   }
@@ -73,7 +80,17 @@
       («San José de Cúcuta» ↔ «Cúcuta»); y lo mismo sin espacios. Si hay dos posibles, no adivina: null. */
   const CORTAS = new Set(["de", "del", "la", "las", "los", "el", "y"]);
   const compacto = (n) => n.split(" ").filter((w) => !CORTAS.has(w)).join("");
-  function elegirNombre(buscado, opciones) {
+  /** Igual que elegirBase, pero si el parecido también le corresponde a otro municipio del mismo
+      departamento («San Jacinto del Cauca» y «San Jacinto» → «San Jacinto»), no adivina. */
+  function elegirNombre(buscado, opciones, hermanos) {
+    const elegido = elegirBase(buscado, opciones);
+    if (!elegido || !hermanos || !hermanos.length) return elegido;
+    const nb = normalizar(buscado);
+    if (normalizar(elegido) === nb) return elegido;
+    const choca = hermanos.some((h) => normalizar(h) !== nb && elegirBase(h, opciones) === elegido);
+    return choca ? null : elegido;
+  }
+  function elegirBase(buscado, opciones) {
     const nb = normalizar(buscado);
     if (!nb) return null;
     const ignorar = new Set(["no definido", "sin definir", "distrito capital"]);

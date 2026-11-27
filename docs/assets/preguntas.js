@@ -28,6 +28,14 @@
         fecha: ["fecha_de_firma", "fecha de firma"],
         valor: ["valor_del_contrato", "valor del contrato"]
       },
+      tipos: { fecha: "fecha", valor: "numero" },
+      // Columnas que se llevan a Excel desde esta pregunta: las del contrato, sin cédulas,
+      // representantes, supervisores ni cuentas bancarias. Las que no existan se omiten.
+      columnasExcel: ["nombre_entidad", "nit_entidad", "departamento", "ciudad", "orden", "sector",
+        "proceso_de_compra", "id_contrato", "referencia_del_contrato", "estado_contrato", "tipo_de_contrato",
+        "modalidad_de_contratacion", "objeto_del_contrato", "descripcion_del_proceso", "fecha_de_firma",
+        "fecha_de_inicio_del_contrato", "fecha_de_fin_del_contrato", "proveedor_adjudicado", "es_pyme",
+        "valor_del_contrato", "valor_pagado", "origen_de_los_recursos", "urlproceso"],
       // El SECOP II guarda el lugar como nombre («Cúcuta»), no como código DANE:
       // primero se buscan los nombres de ciudad que usa en ese departamento.
       necesitaNombres: true,
@@ -37,7 +45,7 @@
       // Ciudades que el SECOP II escribe de otra forma y no se reconocen solas.
       ciudades: { "13468": "Mompós" },
       titulo: (m) => `¿Cuántos contratos firmaron las entidades con sede en ${m} en los últimos 12 meses?`,
-      nota: "Cuenta los contratos de entidades registradas en el municipio (alcaldía, hospital, colegios…). Los de entidades nacionales que ejecutan ahí no entran. Hay valores mal digitados en la fuente: revisa los más altos antes de concluir.",
+      nota: "Cuenta los contratos de entidades registradas en el municipio (alcaldía, hospital, colegios…). Los de entidades nacionales que ejecutan ahí no entran. El SECOP II guarda el municipio como nombre: si lo escribe distinto («Cali» por «Santiago de Cali»), lo reconocemos por parecido, y si el parecido se confunde con otro municipio del departamento, no contamos. Hay valores mal digitados en la fuente: revisa los más altos antes de concluir.",
       consulta(c, lugar, hoy) {
         const v = L.ventanaDoceMeses(hoy);
         return {
@@ -65,6 +73,7 @@
           unidad: total === 1 ? "contrato" : "contratos",
           detalle: total ? `${plata} El más reciente se firmó el ${L.diaTexto(L.leerDia(fila.ultima))}.` : "No aparece ninguno en esta ventana.",
           sospechoso,
+          filasTotal: total,
           periodo: `Del ${L.diaTexto(ctx.ventana.desdeDia)} al ${L.diaTexto(ctx.ventana.hastaDia)}`
         };
       }
@@ -81,13 +90,14 @@
         cobertura: ["cobertura_neta", "cobertura neta"],
         desercion: ["deserci_n", "desercion", "deserción"]
       },
+      tipos: { cobertura: "numero", desercion: "numero" },
       titulo: (m) => `¿Qué parte de los niños y jóvenes de ${m}, de 5 a 16 años, está matriculada en su nivel?`,
       nota: "Cobertura neta: estudiantes en el grado que corresponde a su edad frente a la población de 5 a 16 años. Puede pasar de 100 % cuando estudian ahí niños de otros municipios o la proyección de población se queda corta. La deserción es la del sector oficial.",
       consulta(c, lugar) {
         return {
           params: {
             select: `${c.ano} as ano, ${c.cobertura} as cobertura, ${c.desercion} as desercion`,
-            where: `${c.codigo}=${L.soqlTexto(lugar.codigo)}`,
+            where: `${c.codigo}=${L.soqlTexto(lugar.codigo)} AND ${c.cobertura} IS NOT NULL`,
             order: `${c.ano} DESC`,
             limit: 1
           },
@@ -115,27 +125,35 @@
         fecha: ["fecha_hecho", "fecha hecho", "fecha"],
         cantidad: ["cantidad", "total"]
       },
+      tipos: { fecha: "fecha", cantidad: "numero" },
       // Este conjunto se publica con un corte (por ejemplo, fin de mes): la ventana de 12 meses
       // termina en la fecha más reciente que traiga el conjunto, no hoy.
       necesitaCorte: true,
-      titulo: (m) => `¿Cuántos hurtos a personas se registraron en ${m} en los últimos 12 meses con datos?`,
-      nota: "Son los casos registrados por la Policía Nacional. No incluye los que no se denuncian.",
+      titulo: (m) => `¿Cuántas personas fueron víctimas de hurto en ${m} en los últimos 12 meses con datos?`,
+      nota: "Son víctimas de hurto a personas registradas por la Policía Nacional (el conjunto se mide en víctimas). No incluye los casos que no se denuncian.",
       consulta(c, lugar, hoy, corte) {
         const v = L.ventanaDoceMeses(corte || hoy);
         const where = `${c.codigo}=${L.soqlTexto(lugar.codigo)} AND ${c.fecha} >= '${v.desde}' AND ${c.fecha} < '${v.hasta}'`;
         return {
           ventana: v,
-          params: { select: `sum(${c.cantidad}) as total, count(*) as registros`, where },
+          params: { select: `sum(${c.cantidad}) as total, count(*) as registros, max(${c.fecha}) as ultima`, where },
           filas: { where, order: `${c.fecha} DESC` }
         };
       },
       resultado(fila, ctx) {
-        const total = Number(fila && fila.total) || 0;
+        const periodo = `Del ${L.diaTexto(ctx.ventana.desdeDia)} al ${L.diaTexto(ctx.ventana.hastaDia)}, fecha de corte del conjunto`;
+        const registros = Number(fila && fila.registros) || 0;
+        // Sin filas no es «cero hurtos»: el conjunto no trae datos de ese municipio en la ventana
+        if (!registros) return { cifra: "Sin registros", unidad: "", detalle: "El conjunto no trae registros de este municipio en esta ventana.", periodo };
+        const total = Number(fila.total) || 0;
+        const ultima = L.leerDia(fila.ultima), fin = ctx.ventana.hastaDia;
+        const atrasado = ultima && L.isoDia(ultima) < L.isoDia(fin);
         return {
           cifra: L.miles(total),
-          unidad: total === 1 ? "hurto" : "hurtos",
-          detalle: "",
-          periodo: `Del ${L.diaTexto(ctx.ventana.desdeDia)} al ${L.diaTexto(ctx.ventana.hastaDia)}, fecha de corte del conjunto`
+          unidad: total === 1 ? "víctima de hurto" : "víctimas de hurto",
+          filasTotal: registros,
+          detalle: atrasado ? `El dato más reciente de este municipio es del ${L.diaTexto(ultima)}.` : "",
+          periodo
         };
       }
     }
@@ -149,7 +167,7 @@
     const hoy = opciones.hoy || L.hoyBogota();
     const enlace = `${L.SITIO}/d/${p.conjunto}`;
     const meta = await pedir(`${L.SITIO}/api/views/${p.conjunto}.json`);
-    const roles = L.resolverRoles(meta, p.roles);
+    const roles = L.resolverRoles(meta, p.roles, p.tipos);
     if (!roles.ok) return { estado: "pausa", faltan: roles.faltan, enlace, meta };
     const c = roles.campos;
     const fuente = Object.assign({}, lugar);
@@ -159,8 +177,12 @@
       if (!Array.isArray(ciudades) || !ciudades.length) return { estado: "sin-lugar", que: lugar.departamento, enlace, meta };
       const valores = ciudades.map((x) => x.v);
       const alias = (p.ciudades || {})[lugar.codigo];
-      fuente.municipioFuente = alias && valores.includes(alias) ? alias : L.elegirNombre(lugar.municipio, valores);
-      if (!fuente.municipioFuente) return { estado: "sin-lugar", que: lugar.municipio, enlace, meta };
+      fuente.municipioFuente = alias && valores.includes(alias) ? alias : L.elegirNombre(lugar.municipio, valores, lugar.hermanos);
+      if (!fuente.municipioFuente) {
+        // ¿Había un parecido que se descartó porque también es de otro municipio del departamento?
+        const parecido = lugar.hermanos ? L.elegirNombre(lugar.municipio, valores) : null;
+        return { estado: "sin-lugar", que: lugar.municipio, parecido, enlace, meta };
+      }
     }
     let corte = null;
     if (p.necesitaCorte) {
@@ -168,6 +190,11 @@
       corte = L.leerDia(r && r[0] && r[0].corte);
     }
     const k = p.consulta(c, fuente, hoy, corte);
+    if (p.columnasExcel) {
+      const existen = new Set(L.columnasVisibles(meta).map((x) => x.fieldName));
+      const select = p.columnasExcel.filter((f) => existen.has(f));
+      if (select.length) k.filas.select = select.join(", ");
+    }
     const url = L.urlRecurso(p.conjunto, k.params);
     const filas = await pedir(url);
     if (!Array.isArray(filas)) throw new Error("Respuesta inesperada de datos.gov.co");
