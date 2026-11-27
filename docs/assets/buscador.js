@@ -20,6 +20,7 @@
   let pagina = 1;
   let ultimo = null;
   let divipola = null;
+  let pendiente = null;   // ejemplo pulsado antes de que cargue la lista de municipios
   const metas = new Map();
 
   // ---------- Red ----------
@@ -47,7 +48,7 @@
   // ---------- Carga clara ----------
   /** Pone un aviso de carga en `caja` y, si tarda, lo dice. Devuelve una función para quitarlo. */
   function cargando(caja, texto) {
-    caja.innerHTML = `<p class="cargando" role="status"><span class="cargando__barra" aria-hidden="true"></span><span>${esc(texto)}</span></p>`;
+    caja.innerHTML = `<p class="cargando"><span class="cargando__barra" aria-hidden="true"></span><span>${esc(texto)}</span></p>`;
     const t = setTimeout(() => {
       const s = caja.querySelector(".cargando span:last-child");
       if (s) s.textContent = texto + " datos.gov.co está tardando: los conjuntos grandes, como el SECOP II, pueden tomar hasta medio minuto.";
@@ -58,7 +59,11 @@
     caja.innerHTML = `<p class="aviso">${esc(mensaje)} <button type="button" class="enlace">Reintentar</button></p>`;
     caja.querySelector("button").addEventListener("click", reintentar);
   }
-  const mensajeError = (e) => e && e.name === "AbortError" ? "datos.gov.co no respondió a tiempo." : "datos.gov.co no respondió.";
+  function mensajeError(e) {
+    if (e && e.name === "AbortError") return "datos.gov.co no respondió a tiempo.";
+    if (e && /^HTTP 4\d\d/.test(e.message)) return "datos.gov.co rechazó la consulta: puede que el conjunto haya cambiado. Si se repite, avísanos en GitHub.";
+    return "datos.gov.co no respondió.";
+  }
 
   // ---------- Copiar y descargar ----------
   async function copiar(texto) {
@@ -67,9 +72,10 @@
       document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { ok = false; } t.remove(); return ok;
     }
   }
+  // La región de aviso está siempre en la página (vacía) para que los lectores de pantalla la anuncien
   function avisar(el, texto) {
-    el.hidden = false; el.textContent = texto;
-    clearTimeout(el._t); el._t = setTimeout(() => { el.hidden = true; }, 6000);
+    el.textContent = texto;
+    clearTimeout(el._t); el._t = setTimeout(() => { el.textContent = ""; }, 8000);
   }
   function descargar(contenido, nombre) {
     const blob = new Blob([contenido], { type: "text/csv;charset=utf-8" });
@@ -84,7 +90,9 @@
     boton.textContent = "Preparando el archivo…";
     try {
       const m = meta || await metadatos(id);
-      const cols = L.columnasVisibles(m);
+      // Si la pregunta pidió solo algunas columnas ($select), el archivo lleva solo esas
+      const pedidas = params && params.select ? new Set(params.select.split(",").map((x) => x.trim())) : null;
+      const cols = L.columnasVisibles(m).filter((c) => !pedidas || pedidas.has(c.fieldName));
       const filas = await pedir(L.urlRecurso(id, Object.assign({ order: ":id" }, params || {}, { limit: TOPE_EXCEL })), 120000);
       if (!Array.isArray(filas)) throw new Error("Respuesta inesperada");
       descargar(L.aCSV(cols, filas), L.nombreArchivo(nombre));
@@ -149,9 +157,9 @@
         <button type="button" class="boton boton--chico" data-accion="detalle" aria-expanded="false">Ver columnas y muestra</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="llevar">Llévalo a tu IA</button>
         <a class="boton boton--chico boton--claro" href="${SITIO}/d/${idu}" target="_blank" rel="noopener">Abrir en datos.gov.co</a>
-        <span class="copiado" role="status" hidden></span>
+        <span class="copiado" role="status"></span>
       </div>
-      <div class="detalle" hidden></div>`;
+      <div class="detalle" aria-live="polite" hidden></div>`;
     el.querySelector('[data-accion="detalle"]').addEventListener("click", (ev) => alternarDetalle(el, r, ev.currentTarget));
     el.querySelector('[data-accion="llevar"]').addEventListener("click", () => llevarIA(el, r));
     return el;
@@ -196,7 +204,7 @@
         <div class="acciones">
           <button type="button" class="boton boton--chico" data-accion="excel">Llévatelo a Excel</button>
           <button type="button" class="boton boton--chico boton--claro" data-accion="enlace">Copiar enlace de la consulta</button>
-          <span class="copiado" role="status" hidden></span>
+          <span class="copiado" role="status"></span>
         </div>
         <p class="nota">Excel: hasta ${L.miles(TOPE_EXCEL)} filas, limpias de fórmulas.${total != null && total > TOPE_EXCEL ? ` Este conjunto tiene ${L.miles(total)}: para todas, la <a href="${SITIO}/api/views/${encodeURIComponent(r.id)}/rows.csv?accessType=DOWNLOAD" rel="noopener">descarga completa</a> del portal (archivo original, sin limpiar).` : ""} API: <a href="${SITIO}/resource/${encodeURIComponent(r.id)}.json" target="_blank" rel="noopener">${DOMINIO}/resource/${esc(r.id)}.json</a></p>`;
       activarColumnas(caja);
@@ -291,7 +299,7 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
     if (!divipola) return null;
     for (const d of divipola.departamentos) {
       const m = d.municipios.find((x) => x[0] === codigo);
-      if (m) return { codigo: m[0], municipio: m[1], departamento: d.nombre, codigoDepartamento: d.codigo };
+      if (m) return { codigo: m[0], municipio: m[1], departamento: d.nombre, codigoDepartamento: d.codigo, hermanos: d.municipios.map((x) => x[1]) };
     }
     return null;
   }
@@ -312,7 +320,8 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
     }
     $("depto").addEventListener("change", () => llenarMunicipios($("depto").value));
     const pedido = new URLSearchParams(location.search).get("municipio");
-    if (pedido && /^\d{5}$/.test(pedido)) mostrarMunicipio(pedido, false);
+    if (pendiente) mostrarMunicipio(pendiente, true);
+    else if (pedido && /^\d{5}$/.test(pedido)) mostrarMunicipio(pedido, false);
   }
   function mostrarMunicipio(codigo, enfocar) {
     const lugar = buscarMunicipio(codigo);
@@ -328,7 +337,6 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
     for (const p of P.PREGUNTAS) {
       const art = document.createElement("article");
       art.className = "pregunta";
-      art.setAttribute("aria-live", "polite");
       caja.appendChild(art);
       responderPregunta(art, p, lugar);
     }
@@ -338,7 +346,7 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
     return `<p class="pregunta__tema">${esc(p.tema)}</p><p class="pregunta__q">${esc(p.titulo(lugar.municipio))}</p>`;
   }
   async function responderPregunta(art, p, lugar) {
-    art.innerHTML = cabeceraPregunta(p, lugar) + '<div class="pregunta__cuerpo"></div>';
+    art.innerHTML = cabeceraPregunta(p, lugar) + '<div class="pregunta__cuerpo" aria-live="polite"></div>';
     const cuerpo = art.querySelector(".pregunta__cuerpo");
     const parar = cargando(cuerpo, "Consultando datos.gov.co…");
     let r;
@@ -351,7 +359,10 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
       return;
     }
     if (r.estado === "sin-lugar") {
-      cuerpo.innerHTML = `<p class="aviso">El conjunto no trae «${esc(r.que)}» con ese nombre: sus registros pueden estar sin lugar («No definido»). Para no adivinar, no contamos. Búscalo directamente en el conjunto.</p>${fuente}`;
+      const porque = r.parecido
+        ? `El conjunto escribe «${esc(r.parecido)}», que puede ser «${esc(r.que)}» u otro municipio del departamento.`
+        : `El conjunto no trae «${esc(r.que)}» con ese nombre: sus registros pueden estar sin lugar («No definido»).`;
+      cuerpo.innerHTML = `<p class="aviso">${porque} Para no adivinar, no contamos. Búscalo directamente en el conjunto.</p>${fuente}`;
       return;
     }
     cuerpo.innerHTML = `
@@ -365,11 +376,11 @@ Cita en tu respuesta la entidad, el ID del conjunto y la fecha de actualización
         <button type="button" class="boton boton--chico" data-accion="excel">Llévatelo a Excel</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="ia">Llévalo a tu IA</button>
         <button type="button" class="boton boton--chico boton--claro" data-accion="consulta">Copiar la consulta</button>
-        <span class="copiado" role="status" hidden></span>
+        <span class="copiado" role="status"></span>
       </div>`;
     const aviso = cuerpo.querySelector(".copiado");
     cuerpo.querySelector('[data-accion="excel"]').addEventListener("click", (ev) =>
-      llevarExcel({ id: p.conjunto, nombre: `${p.id} ${lugar.municipio}`, params: r.filas, meta: r.meta, boton: ev.currentTarget, aviso }));
+      llevarExcel({ id: p.conjunto, nombre: `${p.id} ${lugar.municipio}`, params: r.filas, meta: r.meta, total: r.filasTotal, boton: ev.currentTarget, aviso }));
     cuerpo.querySelector('[data-accion="consulta"]').addEventListener("click", async () => {
       const ok = await copiar(r.url);
       avisar(aviso, ok ? "Consulta copiada: ábrela en el navegador para ver la cifra en la fuente." : "No se pudo copiar la consulta.");
@@ -429,7 +440,9 @@ Cita la entidad, el ID del conjunto y la fecha, y avísame si ves valores atípi
   });
   $("ejemplos").addEventListener("click", (ev) => {
     const b = ev.target.closest("[data-municipio]");
-    if (b && divipola) mostrarMunicipio(b.dataset.municipio, true);
+    if (!b) return;
+    if (divipola) mostrarMunicipio(b.dataset.municipio, true);
+    else pendiente = b.dataset.municipio;
   });
   $("form").addEventListener("submit", (ev) => {
     ev.preventDefault();

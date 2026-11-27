@@ -65,8 +65,8 @@
     <div class="dos">
       <div>
         <h3>Llévatelo a Excel</h3>
-        <p>El botón descarga un archivo que abre directo en Excel, con tildes y coma decimal. Trae hasta 5.000 filas: para todas, usa la descarga completa del portal o el conector.</p>
-        <p class="nota">Las celdas que empiezan con =, +, - o @ se guardan como texto, para que ninguna se ejecute como fórmula al abrir el archivo.</p>
+        <p>El botón descarga un archivo para Excel en español, con tildes y coma decimal. Trae hasta 5.000 filas: para todas, usa la descarga completa del portal o el conector.</p>
+        <p class="nota">Las celdas que empiezan con =, +, - o @ se guardan como texto, para que ninguna se ejecute como fórmula al abrir el archivo. Si tu Excel no separa las columnas o una columna de códigos pierde el cero inicial (05001), ábrelo desde Datos → Desde texto/CSV y marca esa columna como texto.</p>
       </div>
       <div>
         <h3>Llévalo a cualquier IA</h3>
@@ -84,7 +84,7 @@
         <span class="pasos__n" aria-hidden="true">1</span>
         <div>
           <h3>Descarga el conector</h3>
-          <p><a class="boton boton--cobre" href="descargas/datos-abiertos-colombia.mcpb" download>Descargar para Claude Desktop</a></p>
+          <p><a class="boton" href="descargas/datos-abiertos-colombia.mcpb" download>Descargar para Claude Desktop</a></p>
           <p class="nota" id="nota-descarga">Archivo .mcpb. Necesitas Claude Desktop actualizado, en Windows o Mac.</p>
         </div>
       </li>
@@ -92,7 +92,7 @@
         <span class="pasos__n" aria-hidden="true">2</span>
         <div>
           <h3>Ábrelo con Claude Desktop</h3>
-          <p>Haz doble clic en el archivo, o arrástralo a la ventana de Claude Desktop, y pulsa <strong>Instalar</strong>. La primera vez tarda uno o dos minutos mientras Claude Desktop prepara lo que necesita.</p>
+          <p>Haz doble clic en el archivo, o arrástralo a la ventana de Claude Desktop, revisa lo que hace y pulsa <strong>Instalar</strong>. La primera vez necesita internet: Claude Desktop descarga Python y lo que el conector necesita.</p>
           <p class="nota">Si el doble clic no lo abre: Configuración → Extensiones → Configuración avanzada → Instalar extensión…</p>
         </div>
       </li>
@@ -140,7 +140,7 @@
     <h2 id="t-limites">Límites</h2>
     <ul class="lista">
       <li>Los datos son de cada entidad que los publica y no están validados aquí: revisa fechas, unidades y valores atípicos antes de sacar conclusiones.</li>
-      <li>Todo se carga directamente desde datos.gov.co en tu navegador. Si el portal está lento o caído, esta página también.</li>
+      <li>Todo se carga directamente desde datos.gov.co y su catálogo (api.us.socrata.com) en tu navegador. Si el portal está lento o caído, esta página también.</li>
       <li>Las preguntas del municipio dependen de los nombres de columna que use cada conjunto. Si datos.gov.co los cambia, la pregunta se pone en pausa con un aviso hasta que la ajustemos.</li>
       <li>Muestra solo conjuntos de tipo tabla; los mapas, gráficos y enlaces externos del portal no aparecen.</li>
     </ul>

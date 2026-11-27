@@ -9,8 +9,8 @@ Construida por Estado X en noviembre de 2026 (versión 0.2.0 del paquete). Nada 
 - **¿Qué hay de mi municipio?** Selector de departamento y municipio con la DIVIPOLA del DANE (`docs/assets/divipola.json`, conjunto `gdxc-w37w`, regenerable con `herramientas/actualizar_divipola.py`) y tres preguntas listas (`docs/assets/preguntas.js`):
   - contratos firmados en los últimos 12 meses por entidades con sede en el municipio (SECOP II, `jbjy-vk9h`), con aviso cuando un solo contrato pesa más de la mitad de la suma;
   - cobertura neta y deserción escolar del último año publicado (Ministerio de Educación, `nudc-7mev`);
-  - hurtos a personas en los 12 meses que terminan en la fecha de corte del conjunto (MinDefensa, `4rxi-8m8d`).
-  Cada columna se busca por varios nombres posibles: si datos.gov.co cambia uno y ninguno aparece, la pregunta se pausa con un aviso y la página sigue funcionando.
+  - víctimas de hurto a personas en los 12 meses que terminan en la fecha de corte del conjunto (MinDefensa, `4rxi-8m8d`); si el municipio no trae registros, lo dice en vez de mostrar cero.
+  Cada columna se busca por varios nombres posibles y se comprueba su tipo: si datos.gov.co cambia un nombre o un tipo, la pregunta se pausa con un aviso y la página sigue funcionando.
 - **Columnas legibles:** nombre, tipo y descripción de cada columna, con el nombre técnico en pequeño; 12 a la vista y el resto con «Ver las N columnas». La muestra usa los nombres legibles.
 - **Carga clara:** barra de carga, aviso cuando datos.gov.co tarda, límite de espera y «Reintentar».
 - **«Llévatelo a Excel»:** hasta 5.000 filas armadas en el navegador, en un CSV para Excel en español (BOM, punto y coma, coma decimal). Las celdas que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno se escriben con un apóstrofo delante, para que ninguna se ejecute como fórmula.
@@ -31,7 +31,7 @@ Construida por Estado X en noviembre de 2026 (versión 0.2.0 del paquete). Nada 
 | `helpers/env_config.py`, `helpers/user_agent.py` | `datos_colombia/config.py` | Direcciones fijas de datos.gov.co (ya no hay entornos demo/prod), identificación del conector y token opcional de Socrata. |
 | `.env.example` | Mismo nombre | Salen `MCP_ENV`, `DATAGOUV_API_ENV`, `URLS_ALLOW_LOCAL`, `URLS_ALLOW_PRIVATE` y las variables de Matomo y Sentry. Entran `MCP_HOSTS_PERMITIDOS` y `SOCRATA_APP_TOKEN`. `MCP_HOST` pasa a `127.0.0.1` por defecto. |
 | `Dockerfile`, `docker-compose.yml` | Mismo nombre | Arrancan el modo HTTP con `datos-abiertos-colombia --http --host 0.0.0.0` dentro del contenedor; en `docker-compose.yml` el puerto se publica solo en `127.0.0.1` del equipo; sin variables de Matomo. |
-| `pyproject.toml`, `uv.lock` | Mismo nombre | Paquete `datos-abiertos-colombia`, versión fija `0.1.0` (sin `setuptools-scm`), `license = "MIT"` y el comando `datos-abiertos-colombia` (`[project.scripts]`). Se agrega `uvicorn` como dependencia explícita. Se quitan `sentry-sdk` y `pyyaml`, y de las de desarrollo `niquests-mock` y `ty`. |
+| `pyproject.toml`, `uv.lock` | Mismo nombre | Paquete `datos-abiertos-colombia`, versión fija `0.1.0` (sin `setuptools-scm`; `0.2.0` desde la versión 2), `license = "MIT"` y el comando `datos-abiertos-colombia` (`[project.scripts]`). Se agrega `uvicorn` como dependencia explícita. Se quitan `sentry-sdk` y `pyyaml`, y de las de desarrollo `niquests-mock` y `ty`. |
 | `.gitignore`, `.pre-commit-config.yaml` | Sin cambios | |
 | `LICENSE` | Se agrega «Copyright (c) 2026 Estado X» | El texto y el aviso de la DINUM no cambian. |
 
@@ -43,7 +43,7 @@ Construida por Estado X en noviembre de 2026 (versión 0.2.0 del paquete). Nada 
 | `search_datasets`, `search_organizations` | `buscar_conjuntos`, `buscar_entidades`, `ver_categorias` |
 | `get_dataset_info`, `list_dataset_resources`, `get_resource_info` | `ver_conjunto` (en datos.gov.co cada conjunto es una sola tabla) |
 | `query_resource_data` | `consultar_datos` y `contar_por` (agrupaciones calculadas por el servidor de datos.gov.co) |
-| Pruebas en `tests/` (contra las API francesas) | `pruebas/`: 24 sin internet, con respuestas reales guardadas, y una en vivo (`-m en_vivo`) |
+| Pruebas en `tests/` (contra las API francesas) | `pruebas/`: 24 sin internet, con respuestas reales guardadas, y una en vivo (`-m en_vivo`); desde la versión 2, 28 de Python y las de la página en `pruebas/js/` |
 
 ## Qué se quitó
 

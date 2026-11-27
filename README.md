@@ -16,7 +16,7 @@ Un **buscador web** y un **conector para Claude** que ponen a la mano los datos 
 
 **La página web** (para cualquier persona):
 
-- **¿Qué hay de mi municipio?** Escoges departamento y municipio (lista DIVIPOLA del DANE) y la página responde tres preguntas con datos de datos.gov.co: cuántos contratos firmaron en los últimos 12 meses las entidades con sede ahí (SECOP II), qué parte de los niños y jóvenes está matriculada en su nivel (Ministerio de Educación) y cuántos hurtos a personas registró la Policía en los últimos 12 meses con datos. Cada cifra trae su fuente, su fecha y la consulta para verificarla. Se puede enlazar directo: `?municipio=25754` (Soacha).
+- **¿Qué hay de mi municipio?** Escoges departamento y municipio (lista DIVIPOLA del DANE) y la página responde tres preguntas con datos de datos.gov.co: cuántos contratos firmaron en los últimos 12 meses las entidades con sede ahí (SECOP II), qué parte de los niños y jóvenes está matriculada en su nivel (Ministerio de Educación) y cuántas personas fueron víctimas de hurto según la Policía en los últimos 12 meses con datos. Cada cifra trae su fuente, su fecha y la consulta para verificarla. Se puede enlazar directo: `?municipio=25754` (Soacha).
 - Busca entre los conjuntos de datos en tabla de datos.gov.co, por palabras, categoría y orden (relevancia, más consultados o actualizados hace poco).
 - Muestra quién publica cada conjunto, la fecha de los datos, cuántas filas tiene, sus columnas con nombre legible, tipo y descripción (y el nombre técnico que usa la IA) y una muestra de cinco filas.
 - **«Llévatelo a Excel»** descarga hasta 5.000 filas en un archivo que abre directo en Excel (tildes, coma decimal y punto y coma). Las celdas que empiezan con `=`, `+`, `-` o `@` se guardan como texto, para que ninguna se ejecute como fórmula. Junto a él, «Copiar enlace de la consulta».
@@ -43,7 +43,7 @@ El conector corre en tu computador; no hay servidor de por medio.
 
 1. Descarga [datos-abiertos-colombia.mcpb](https://estado-x.github.io/datos-abiertos-colombia/descargas/datos-abiertos-colombia.mcpb) (unos 57 KB).
 2. Haz doble clic en el archivo, o arrástralo a la ventana de Claude Desktop, y pulsa **Instalar**. Si el doble clic no lo abre: Configuración → Extensiones → Configuración avanzada → Instalar extensión…
-3. La primera vez tarda uno o dos minutos: Claude Desktop instala Python y las versiones fijas de `uv.lock` por su cuenta. Después pregúntale, por ejemplo, «¿cuántos contratos del SECOP II firmó la alcaldía de mi municipio este año?».
+3. La primera vez necesita internet: Claude Desktop descarga Python y las versiones fijas de `uv.lock` por su cuenta. Después pregúntale, por ejemplo, «¿cuántos contratos del SECOP II firmó la alcaldía de mi municipio este año?».
 
 El archivo es un paquete [MCPB](https://github.com/modelcontextprotocol/mcpb) de tipo `uv`: trae el código, `pyproject.toml` y `uv.lock`, sin dependencias adentro. Se arma con `python herramientas/armar_mcpb.py`.
 
@@ -117,7 +117,8 @@ La guía completa está en [CONTRIBUTING.md](CONTRIBUTING.md).
 
 - Los datos son de cada entidad que los publica y **no están validados aquí**. Hay valores atípicos. Por ejemplo, algunas sumas de valores de contratos del SECOP dan cifras imposibles por errores de digitación en la fuente. Revisa antes de concluir.
 - Solo incluye conjuntos de tipo tabla. Los mapas, gráficos y enlaces externos del portal no se consultan por filas.
-- «¿Qué hay de mi municipio?» cuenta los contratos de entidades registradas en el municipio según el SECOP II, que guarda el lugar como nombre y no como código DANE. 158 de los 1.122 municipios no aparecen con su propio nombre (sus entidades salen sin ciudad): ahí la página lo dice y no cuenta (comprobado el 26/11/2026).
+- «¿Qué hay de mi municipio?» cuenta los contratos de entidades registradas en el municipio según el SECOP II, que guarda el lugar como nombre y no como código DANE. En 159 de los 1.122 municipios la página no cuenta y lo dice (comprobado el 26/11/2026): 158 no aparecen con su propio nombre, probablemente porque sus entidades se registraron sin ciudad («No definido»), y uno tiene un nombre que se confunde con el de otro municipio del mismo departamento.
+- «Llévatelo a Excel» desde la pregunta de contratos trae las columnas del contrato, sin cédulas, representantes, supervisores ni cuentas bancarias.
 - «Llévatelo a Excel» trae hasta 5.000 filas. La descarga completa del portal es el archivo original, sin la limpieza de fórmulas.
 - El buscador muestra lo que datos.gov.co responde en el momento: si el portal está lento o caído, el buscador también.
 - No hay un servicio público alojado del conector: cada quien lo corre en su computador o en su propio servidor.
@@ -179,7 +180,7 @@ It runs on your computer; there is no hosted server.
 
 ### Use it or adapt it
 
-Fork it. For the page, enable GitHub Pages (`main` branch, `/docs` folder). For the connector, run `uv sync`, then `uv run pytest` (offline) or `uv run pytest -m en_vivo` (live). It needs Python 3.13. To use another Socrata portal, change `DOMINIO` in `datos_colombia/config.py` and `docs/assets/buscador.js`.
+Fork it. For the page, enable GitHub Pages (`main` branch, `/docs` folder). For the connector, run `uv sync`, then `uv run pytest` (offline) or `uv run pytest -m en_vivo` (live). It needs Python 3.13. To use another Socrata portal, change `DOMINIO` in `datos_colombia/config.py` and `docs/assets/logica.js`.
 
 ### Limits
 

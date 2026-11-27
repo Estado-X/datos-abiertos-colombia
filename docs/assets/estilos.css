@@ -53,7 +53,7 @@ h3 { margin: 0 0 6px; font: 600 18px/1.3 var(--sans); color: var(--vino); }
 .municipio-form select { width: 100%; min-width: 0; font: 500 17px/1.2 var(--sans); padding: 13px 12px; border-radius: var(--r-md); border: 1.5px solid rgba(242,235,220,.4); background: var(--marfil-050); color: var(--tinta); }
 .municipio-form select:disabled { opacity: .7; }
 .ejemplos { margin: 0; font-size: 15px; color: rgba(242,235,220,.88); }
-.enlace { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.enlace { font: inherit; color: inherit; background: none; border: 0; padding: 10px 2px; margin: -10px -2px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .banda .enlace { color: var(--marfil); }
 .cifra-portal { margin: 0; font-size: 15px; color: rgba(242,235,220,.85); }
 .cifra-portal strong { color: var(--marfil); font-weight: 600; font-variant-numeric: tabular-nums; }
