@@ -1,6 +1,6 @@
 [project]
 name = "datos-abiertos-colombia"
-version = "0.1.0"
+version = "0.2.0"
 description = "Conector MCP para buscar y consultar los datos abiertos de Colombia (datos.gov.co). Adaptado de datagouv-mcp."
 authors = [{ name = "Estado X" }, { name = "data.gouv.fr (proyecto original)", email = "opendatateam@data.gouv.fr" }]
 readme = "README.md"

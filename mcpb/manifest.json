@@ -1,0 +1,43 @@
+{
+  "manifest_version": "0.4",
+  "name": "datos-abiertos-colombia",
+  "display_name": "Datos abiertos de Colombia",
+  "version": "0.2.0",
+  "description": "Busca, lee y cuenta los datos abiertos del Estado colombiano en datos.gov.co. Solo lectura, sin clave.",
+  "long_description": "Conector de Estado X para datos.gov.co, el portal de datos abiertos de Colombia: contratos del SECOP, salud, educación, transporte, ambiente y miles más. Seis herramientas de solo lectura: buscar conjuntos y entidades, ver categorías, ver la ficha de un conjunto, consultar filas y contar por grupo. Cada respuesta trae la consulta reproducible. Adaptado de datagouv-mcp, de la DINUM de Francia (licencia MIT).",
+  "author": {
+    "name": "Estado X",
+    "url": "https://estadox.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Estado-X/datos-abiertos-colombia"
+  },
+  "homepage": "https://estado-x.github.io/datos-abiertos-colombia/",
+  "documentation": "https://github.com/Estado-X/datos-abiertos-colombia#readme",
+  "support": "https://github.com/Estado-X/datos-abiertos-colombia/issues",
+  "server": {
+    "type": "uv",
+    "entry_point": "datos_colombia/servidor.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run", "--directory", "${__dirname}", "--frozen", "--no-dev", "datos-abiertos-colombia"]
+    }
+  },
+  "tools": [
+    { "name": "buscar_conjuntos", "description": "Buscar conjuntos de datos por palabras, con filtros de categoría y entidad" },
+    { "name": "buscar_entidades", "description": "Encontrar el nombre exacto con el que publica una entidad" },
+    { "name": "ver_categorias", "description": "Ver las categorías temáticas del portal" },
+    { "name": "ver_conjunto", "description": "Ficha de un conjunto: entidad, fechas, licencia, filas y columnas" },
+    { "name": "consultar_datos", "description": "Leer filas con filtros y orden, sin descargar el archivo" },
+    { "name": "contar_por", "description": "Totales por grupo, calculados por datos.gov.co" }
+  ],
+  "keywords": ["colombia", "datos abiertos", "datos.gov.co", "secop", "socrata", "gobierno"],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "python": ">=3.13,<3.15"
+    }
+  }
+}

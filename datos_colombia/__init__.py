@@ -8,4 +8,4 @@ try:
 
     __version__ = version("datos-abiertos-colombia")
 except Exception:  # noqa: BLE001  (paquete sin instalar)
-    __version__ = "0.1.0"
+    __version__ = "0.2.0"
