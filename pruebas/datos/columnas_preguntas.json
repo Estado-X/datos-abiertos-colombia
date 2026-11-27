@@ -1,0 +1,730 @@
+{
+ "_nota": "Columnas reales de los conjuntos de «¿Qué hay de mi municipio?», copiadas de datos.gov.co el 26/11/2026 (solo nombre técnico, nombre visible y tipo).",
+ "conjuntos": {
+  "jbjy-vk9h": {
+   "name": "SECOP II - Contratos Electrónicos",
+   "columns": [
+    {
+     "fieldName": "nombre_entidad",
+     "name": "Nombre Entidad",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "nit_entidad",
+     "name": "Nit Entidad",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "departamento",
+     "name": "Departamento",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "ciudad",
+     "name": "Ciudad",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "localizaci_n",
+     "name": "Localización",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "orden",
+     "name": "Orden",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "sector",
+     "name": "Sector",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "rama",
+     "name": "Rama",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "entidad_centralizada",
+     "name": "Entidad Centralizada",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "proceso_de_compra",
+     "name": "Proceso de Compra",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "id_contrato",
+     "name": "ID Contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "referencia_del_contrato",
+     "name": "Referencia del Contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "estado_contrato",
+     "name": "Estado Contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "codigo_de_categoria_principal",
+     "name": "Codigo de Categoria Principal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "descripcion_del_proceso",
+     "name": "Descripcion del Proceso",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_contrato",
+     "name": "Tipo de Contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "modalidad_de_contratacion",
+     "name": "Modalidad de Contratacion",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "justificacion_modalidad_de",
+     "name": "Justificacion Modalidad de Contratacion",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "fecha_de_firma",
+     "name": "Fecha de Firma",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_de_inicio_del_contrato",
+     "name": "Fecha de Inicio del Contrato",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_de_fin_del_contrato",
+     "name": "Fecha de Fin del Contrato",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "condiciones_de_entrega",
+     "name": "Condiciones de Entrega",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipodocproveedor",
+     "name": "TipoDocProveedor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "documento_proveedor",
+     "name": "Documento Proveedor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "proveedor_adjudicado",
+     "name": "Proveedor Adjudicado",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "es_grupo",
+     "name": "Es Grupo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "es_pyme",
+     "name": "Es Pyme",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "habilita_pago_adelantado",
+     "name": "Habilita Pago Adelantado",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "liquidaci_n",
+     "name": "Liquidación",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "obligaci_n_ambiental",
+     "name": "Obligación Ambiental",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "obligaciones_postconsumo",
+     "name": "Obligaciones Postconsumo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "reversion",
+     "name": "Reversion",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "origen_de_los_recursos",
+     "name": "Origen de los Recursos",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "destino_gasto",
+     "name": "Destino Gasto",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "valor_del_contrato",
+     "name": "Valor del Contrato",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_de_pago_adelantado",
+     "name": "Valor de pago adelantado",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_facturado",
+     "name": "Valor Facturado",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_pendiente_de_pago",
+     "name": "Valor Pendiente de Pago",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_pagado",
+     "name": "Valor Pagado",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_amortizado",
+     "name": "Valor Amortizado",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_pendiente_de",
+     "name": "Valor Pendiente de Amortizacion",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "valor_pendiente_de_ejecucion",
+     "name": "Valor Pendiente de Ejecucion",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "saldo_cdp",
+     "name": "Saldo CDP",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "saldo_vigencia",
+     "name": "Saldo Vigencia",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "espostconflicto",
+     "name": "EsPostConflicto",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "dias_adicionados",
+     "name": "Dias adicionados",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "puntos_del_acuerdo",
+     "name": "Puntos del Acuerdo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "pilares_del_acuerdo",
+     "name": "Pilares del Acuerdo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "urlproceso",
+     "name": "URLProceso",
+     "dataTypeName": "url"
+    },
+    {
+     "fieldName": "nombre_representante_legal",
+     "name": "Nombre Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "nacionalidad_representante_legal",
+     "name": "Nacionalidad Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "domicilio_representante_legal",
+     "name": "Domicilio Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_identificaci_n_representante_legal",
+     "name": "Tipo de Identificación Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "identificaci_n_representante_legal",
+     "name": "Identificación Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "g_nero_representante_legal",
+     "name": "Género Representante Legal",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "presupuesto_general_de_la_nacion_pgn",
+     "name": "Presupuesto General de la Nacion – PGN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "sistema_general_de_participaciones",
+     "name": "Sistema General de Participaciones",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "sistema_general_de_regal_as",
+     "name": "Sistema General de Regalías",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "recursos_propios_alcald_as_gobernaciones_y_resguardos_ind_genas_",
+     "name": "Recursos Propios (Alcaldías y Gobernaciones)",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "recursos_de_credito",
+     "name": "Recursos de Credito",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "recursos_propios",
+     "name": "Otros Recursos (Especie, Privados, Cooperación, Propios Entidades Autónomas)",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "ultima_actualizacion",
+     "name": "Ultima Actualizacion",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "codigo_entidad",
+     "name": "Codigo Entidad",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "codigo_proveedor",
+     "name": "Codigo Proveedor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "fecha_inicio_liquidacion",
+     "name": "Fecha Inicio Liquidacion",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_fin_liquidacion",
+     "name": "Fecha Fin Liquidacion",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "objeto_del_contrato",
+     "name": "Objeto del Contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "duraci_n_del_contrato",
+     "name": "Duración del contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "nombre_del_banco",
+     "name": "Nombre del banco",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_cuenta",
+     "name": "Tipo de cuenta",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "n_mero_de_cuenta",
+     "name": "Número de cuenta",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "el_contrato_puede_ser_prorrogado",
+     "name": "El contrato puede ser prorrogado",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "fecha_de_notificaci_n_de_prorrogaci_n",
+     "name": "Fecha de notificación de prorrogación",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "nombre_ordenador_del_gasto",
+     "name": "Nombre ordenador del gasto",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_documento_ordenador_del_gasto",
+     "name": "Tipo de documento Ordenador del gasto",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "n_mero_de_documento_ordenador_del_gasto",
+     "name": "Número de documento Ordenador del gasto",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "nombre_supervisor",
+     "name": "Nombre supervisor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_documento_supervisor",
+     "name": "Tipo de documento supervisor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "n_mero_de_documento_supervisor",
+     "name": "Número de documento supervisor",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "nombre_ordenador_de_pago",
+     "name": "Nombre Ordenador de Pago",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tipo_de_documento_ordenador_de_pago",
+     "name": "Tipo de documento Ordenador de Pago",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "n_mero_de_documento_ordenador_de_pago",
+     "name": "Número de documento Ordenador de Pago",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "documentos_tipo",
+     "name": "Documentos Tipo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "descripcion_documentos_tipo",
+     "name": "Descripcion Documentos Tipo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "direcci_n_de_ejecuci_n_del_contrato",
+     "name": "Dirección de ejecución del contrato",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "criterios_de_sostenibilidad_ambiental",
+     "name": "Criterios de sostenibilidad ambiental",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "requisitos_ambientales_en_las_especificaciones_t_cnicas",
+     "name": "Requisitos ambientales en las especificaciones técnicas",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "criterios_ambientales_en_la_evaluaci_n_de_las_ofertas",
+     "name": "Criterios ambientales en la evaluación de las ofertas",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "obligaciones_contractuales_o_poscontractuales_a_nivel_ambiental",
+     "name": "Obligaciones contractuales o poscontractuales a nivel ambiental",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "uso_de_etiquetado_ecol_gico",
+     "name": "Uso de etiquetado ecológico",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "obligaciones_posconsumo",
+     "name": "Obligaciones posconsumo",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "fecha_inicio_obligaciones_posconsumo",
+     "name": "Fecha inicio obligaciones posconsumo",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_fin_obligaciones_posconsumo",
+     "name": "Fecha fin obligaciones posconsumo",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_inicio_reversi_n",
+     "name": "Fecha inicio reversión",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "fecha_fin_reversi_n",
+     "name": "Fecha fin reversión",
+     "dataTypeName": "calendar_date"
+    }
+   ]
+  },
+  "nudc-7mev": {
+   "name": "MEN_ESTADISTICAS_EN_EDUCACION_EN_PREESCOLAR, BÁSICA Y MEDIA_POR_MUNICIPIO",
+   "columns": [
+    {
+     "fieldName": "a_o",
+     "name": "AÑO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "c_digo_municipio",
+     "name": "CÓDIGO_MUNICIPIO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "municipio",
+     "name": "MUNICIPIO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "c_digo_departamento",
+     "name": "CÓDIGO_DEPARTAMENTO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "departamento",
+     "name": "DEPARTAMENTO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "c_digo_etc",
+     "name": "CÓDIGO_ETC",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "etc",
+     "name": "ETC",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "poblaci_n_5_16",
+     "name": "POBLACIÓN_5_16",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "tasa_matriculaci_n_5_16",
+     "name": "TASA_MATRICULACIÓN_5_16",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_neta",
+     "name": "COBERTURA_NETA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_neta_transici_n",
+     "name": "COBERTURA_NETA_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_neta_primaria",
+     "name": "COBERTURA_NETA_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_neta_secundaria",
+     "name": "COBERTURA_NETA_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_neta_media",
+     "name": "COBERTURA_NETA_MEDIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_bruta",
+     "name": "COBERTURA_BRUTA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_bruta_transici_n",
+     "name": "COBERTURA_BRUTA_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_bruta_primaria",
+     "name": "COBERTURA_BRUTA_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_bruta_secundaria",
+     "name": "COBERTURA_BRUTA_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "cobertura_bruta_media",
+     "name": "COBERTURA_BRUTA_MEDIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "tama_o_promedio_de_grupo",
+     "name": "TAMAÑO_PROMEDIO_DE_GRUPO",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "sedes_conectadas_a_internet",
+     "name": "SEDES_CONECTADAS_A_INTERNET",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "deserci_n",
+     "name": "DESERCIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "deserci_n_transici_n",
+     "name": "DESERCIÓN_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "deserci_n_primaria",
+     "name": "DESERCIÓN_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "deserci_n_secundaria",
+     "name": "DESERCIÓN_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "deserci_n_media",
+     "name": "DESERCIÓN_MEDIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "aprobaci_n",
+     "name": "APROBACIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "aprobaci_n_transici_n",
+     "name": "APROBACIÓN_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "aprobaci_n_primaria",
+     "name": "APROBACIÓN_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "aprobaci_n_secundaria",
+     "name": "APROBACIÓN_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "aprobaci_n_media",
+     "name": "APROBACIÓN_MEDIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "reprobaci_n",
+     "name": "REPROBACIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "reprobaci_n_transici_n",
+     "name": "REPROBACIÓN_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "reprobaci_n_primaria",
+     "name": "REPROBACIÓN_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "reprobaci_n_secundaria",
+     "name": "REPROBACIÓN_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "reprobaci_n_media",
+     "name": "REPROBACIÓN_MEDIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "repitencia",
+     "name": "REPITENCIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "repitencia_transici_n",
+     "name": "REPITENCIA_TRANSICIÓN",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "repitencia_primaria",
+     "name": "REPITENCIA_PRIMARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "repitencia_secundaria",
+     "name": "REPITENCIA_SECUNDARIA",
+     "dataTypeName": "number"
+    },
+    {
+     "fieldName": "repitencia_media",
+     "name": "REPITENCIA_MEDIA",
+     "dataTypeName": "number"
+    }
+   ]
+  },
+  "4rxi-8m8d": {
+   "name": "HURTO PERSONAS",
+   "columns": [
+    {
+     "fieldName": "fecha_hecho",
+     "name": "FECHA HECHO",
+     "dataTypeName": "calendar_date"
+    },
+    {
+     "fieldName": "cod_depto",
+     "name": "COD_DEPTO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "departamento",
+     "name": "DEPARTAMENTO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "cod_muni",
+     "name": "COD_MUNI",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "municipio",
+     "name": "MUNICIPIO",
+     "dataTypeName": "text"
+    },
+    {
+     "fieldName": "cantidad",
+     "name": "CANTIDAD",
+     "dataTypeName": "number"
+    }
+   ]
+  }
+ }
+}
