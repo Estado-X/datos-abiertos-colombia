@@ -54,6 +54,12 @@ test("elegirNombre: exacto, luego por palabras completas, nunca adivina entre do
   assert.equal(L.elegirNombre("San Juan", ["San Juan de Arama", "San Juan de Rioseco"]), null);
   assert.equal(L.elegirNombre("Patios", ["Los Patios"]), "Los Patios");
   assert.equal(L.elegirNombre("Tunja", ["Duitama"]), null);
+  // Variantes de escritura reales del SECOP II (26/11/2026)
+  assert.equal(L.elegirNombre("Donmatías", ["Don Matías", "No Definido"]), "Don Matías");
+  assert.equal(L.elegirNombre("Santa Fé de Antioquia", ["Santafé De Antioquia"]), "Santafé De Antioquia");
+  assert.equal(L.elegirNombre("San Andrés de Sotavento", ["San Andrés Sotavento", "San Antero"]), "San Andrés Sotavento");
+  assert.equal(L.elegirNombre("San José de Toluviejo", ["Tolú Viejo", "Sincelejo"]), "Tolú Viejo");
+  assert.equal(L.elegirNombre("Concordia", ["No Definido", "Medellín"]), null);
 });
 
 test("soqlTexto escapa las comillas simples", () => {
@@ -130,9 +136,10 @@ test("las consultas de las preguntas escapan el nombre del lugar", () => {
   const k = p.consulta(c, { departamentoFuente: "Nariño", municipioFuente: "O'Higgins", codigo: "52001" }, { a: 2027, m: 1, d: 4 });
   assert.match(k.params.where, /ciudad='O''Higgins'/);
   assert.match(k.params.where, /fecha_de_firma >= '2026-01-05T00:00:00'/);
-  const r = p.resultado({ total: "7884", valor: "566840142042.79", ultima: "2026-11-24T18:36:15.711" }, k);
+  const r = p.resultado({ total: "7884", valor: "566840142042.79", mayor: "49115659583", ultima: "2026-11-24T18:36:15.711" }, k);
   assert.equal(r.cifra, "7.884");
-  assert.match(r.detalle, /566\.840 millones de pesos/);
+  assert.equal(r.sospechoso, false);
+  assert.match(r.detalle, /^Por 566\.840 millones de pesos\./);
   const h = PREGUNTAS.find((x) => x.id === "hurtos");
   const kh = h.consulta({ codigo: "cod_muni", fecha: "fecha_hecho", cantidad: "cantidad" }, { codigo: "25754" }, { a: 2027, m: 1, d: 4 }, { a: 2026, m: 10, d: 31 });
   assert.match(kh.params.where, /fecha_hecho >= '2025-11-01T00:00:00' AND fecha_hecho < '2026-11-01T00:00:00'/);

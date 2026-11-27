@@ -29,8 +29,13 @@
         valor: ["valor_del_contrato", "valor del contrato"]
       },
       // El SECOP II guarda el lugar como nombre («Cúcuta»), no como código DANE:
-      // primero se buscan los nombres que usa en ese departamento.
+      // primero se buscan los nombres de ciudad que usa en ese departamento.
       necesitaNombres: true,
+      // Nombres de departamento del SECOP II que no son iguales a los de la DIVIPOLA
+      // (comprobado el 26/11/2026); los demás coinciden.
+      departamentos: { "11": "Distrito Capital de Bogotá", "88": "San Andrés, Providencia y Santa Catalina" },
+      // Ciudades que el SECOP II escribe de otra forma y no se reconocen solas.
+      ciudades: { "13468": "Mompós" },
       titulo: (m) => `¿Cuántos contratos firmaron las entidades con sede en ${m} en los últimos 12 meses?`,
       nota: "Cuenta los contratos de entidades registradas en el municipio (alcaldía, hospital, colegios…). Los de entidades nacionales que ejecutan ahí no entran. Hay valores mal digitados en la fuente: revisa los más altos antes de concluir.",
       consulta(c, lugar, hoy) {
@@ -38,7 +43,7 @@
         return {
           ventana: v,
           params: {
-            select: `count(*) as total, sum(${c.valor}) as valor, max(${c.fecha}) as ultima`,
+            select: `count(*) as total, sum(${c.valor}) as valor, max(${c.valor}) as mayor, max(${c.fecha}) as ultima`,
             where: `${c.departamento}=${L.soqlTexto(lugar.departamentoFuente)} AND ${c.ciudad}=${L.soqlTexto(lugar.municipioFuente)} AND ${c.fecha} >= '${v.desde}' AND ${c.fecha} < '${v.hasta}'`
           },
           filas: {
@@ -49,10 +54,17 @@
       },
       resultado(fila, ctx) {
         const total = Number(fila && fila.total) || 0;
+        const valor = Number(fila && fila.valor), mayor = Number(fila && fila.mayor);
+        // Si un solo contrato pesa más de la mitad de la suma, casi siempre es un error de digitación
+        const sospechoso = total > 1 && isFinite(valor) && isFinite(mayor) && valor > 0 && mayor > valor / 2;
+        const plata = sospechoso
+          ? `Suman ${L.pesos(valor)}, pero un solo contrato reporta ${L.pesos(mayor)}: puede ser un error de digitación. Revísalo en Excel antes de usar la suma.`
+          : `Por ${L.pesos(valor)}.`;
         return {
           cifra: L.miles(total),
           unidad: total === 1 ? "contrato" : "contratos",
-          detalle: total ? `Por ${L.pesos(fila.valor)}. El más reciente se firmó el ${L.diaTexto(L.leerDia(fila.ultima))}.` : "No aparece ninguno en esta ventana.",
+          detalle: total ? `${plata} El más reciente se firmó el ${L.diaTexto(L.leerDia(fila.ultima))}.` : "No aparece ninguno en esta ventana.",
+          sospechoso,
           periodo: `Del ${L.diaTexto(ctx.ventana.desdeDia)} al ${L.diaTexto(ctx.ventana.hastaDia)}`
         };
       }
@@ -142,11 +154,12 @@
     const c = roles.campos;
     const fuente = Object.assign({}, lugar);
     if (p.necesitaNombres) {
-      const deps = await pedir(L.urlRecurso(p.conjunto, { select: `${c.departamento} as v`, group: c.departamento, limit: 200 }));
-      fuente.departamentoFuente = L.elegirNombre(lugar.departamento, deps.map((x) => x.v));
-      if (!fuente.departamentoFuente) return { estado: "sin-lugar", que: lugar.departamento, enlace, meta };
+      fuente.departamentoFuente = (p.departamentos || {})[String(lugar.codigo).slice(0, 2)] || lugar.departamento;
       const ciudades = await pedir(L.urlRecurso(p.conjunto, { select: `${c.ciudad} as v`, where: `${c.departamento}=${L.soqlTexto(fuente.departamentoFuente)}`, group: c.ciudad, limit: 3000 }));
-      fuente.municipioFuente = L.elegirNombre(lugar.municipio, ciudades.map((x) => x.v));
+      if (!Array.isArray(ciudades) || !ciudades.length) return { estado: "sin-lugar", que: lugar.departamento, enlace, meta };
+      const valores = ciudades.map((x) => x.v);
+      const alias = (p.ciudades || {})[lugar.codigo];
+      fuente.municipioFuente = alias && valores.includes(alias) ? alias : L.elegirNombre(lugar.municipio, valores);
       if (!fuente.municipioFuente) return { estado: "sin-lugar", que: lugar.municipio, enlace, meta };
     }
     let corte = null;

@@ -67,22 +67,35 @@
   }
 
   /** Escoge, entre los valores que usa un conjunto, el que corresponde a un nombre oficial.
-      Exacto primero; si no, uno que lo contenga como palabras completas al principio o al
-      final («San José de Cúcuta» ↔ «Cúcuta»). Si hay dos posibles, no adivina: null. */
+      En orden: igual sin tildes ni mayúsculas; igual sin espacios ni palabras cortas
+      («Donmatías» ↔ «Don Matías», «San Andrés de Sotavento» ↔ «San Andrés Sotavento»);
+      uno que lo contenga como palabras completas al principio o al final
+      («San José de Cúcuta» ↔ «Cúcuta»); y lo mismo sin espacios. Si hay dos posibles, no adivina: null. */
+  const CORTAS = new Set(["de", "del", "la", "las", "los", "el", "y"]);
+  const compacto = (n) => n.split(" ").filter((w) => !CORTAS.has(w)).join("");
   function elegirNombre(buscado, opciones) {
     const nb = normalizar(buscado);
     if (!nb) return null;
-    const limpias = (opciones || []).filter((o) => o != null && String(o).trim() !== "");
+    const ignorar = new Set(["no definido", "sin definir", "distrito capital"]);
+    const limpias = (opciones || []).filter((o) => o != null && String(o).trim() !== "" && !ignorar.has(normalizar(o)));
+    const unico = (lista) => (lista.length === 1 ? lista[0] : null);
     const exactas = limpias.filter((o) => normalizar(o) === nb);
     if (exactas.length) return exactas[0];
-    const ignorar = new Set(["no definido", "sin definir", "distrito capital"]);
-    const parecidas = limpias.filter((o) => {
+    const cb = compacto(nb);
+    const compactas = limpias.filter((o) => compacto(normalizar(o)) === cb);
+    if (compactas.length) return unico(compactas);
+    const porPalabras = limpias.filter((o) => {
       const no = normalizar(o);
-      if (!no || ignorar.has(no)) return false;
       const [corto, largo] = no.length < nb.length ? [no, nb] : [nb, no];
       return largo.startsWith(corto + " ") || largo.endsWith(" " + corto);
     });
-    return parecidas.length === 1 ? parecidas[0] : null;
+    if (porPalabras.length) return unico(porPalabras);
+    // Último intento, sin espacios: «San José de Toluviejo» ↔ «Tolú Viejo» (mínimo 6 letras)
+    return unico(limpias.filter((o) => {
+      const co = compacto(normalizar(o));
+      const [corto, largo] = co.length < cb.length ? [co, cb] : [cb, co];
+      return corto.length >= 6 && (largo.startsWith(corto) || largo.endsWith(corto));
+    }));
   }
 
   // ---------- Consultas SoQL ----------

@@ -26,7 +26,13 @@ MENORES = {"de", "del", "la", "las", "los", "el", "y", "e", "en"}
 
 
 def pedir(url: str):
-    req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "datos-abiertos-colombia (Estado X)"})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/json",
+            "User-Agent": "datos-abiertos-colombia (Estado X)",
+        },
+    )
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.load(r)
 
@@ -46,12 +52,18 @@ def nombre_propio(texto: str) -> str:
             salida.append("-".join(x[:1].upper() + x[1:] if x else x for x in partes))
     nombre = " ".join(salida)
     # Mayúscula después de un paréntesis
-    return "".join(c.upper() if i > 0 and nombre[i - 1] == "(" else c for i, c in enumerate(nombre))
+    return "".join(
+        c.upper() if i > 0 and nombre[i - 1] == "(" else c for i, c in enumerate(nombre)
+    )
 
 
 def orden(texto: str) -> str:
     """Clave para ordenar sin que las tildes manden «Córdoba» al final."""
-    return "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn").lower()
+    return "".join(
+        c
+        for c in unicodedata.normalize("NFD", texto)
+        if unicodedata.category(c) != "Mn"
+    ).lower()
 
 
 def main() -> int:
@@ -62,16 +74,26 @@ def main() -> int:
         return 1
     deptos: dict[str, dict] = {}
     for f in filas:
-        cd, cm = str(f.get("cod_dpto", "")).zfill(2), str(f.get("cod_mpio", "")).zfill(5)
+        cd, cm = (
+            str(f.get("cod_dpto", "")).zfill(2),
+            str(f.get("cod_mpio", "")).zfill(5),
+        )
         if not (cd.isdigit() and cm.isdigit() and cm.startswith(cd)):
             print(f"Fila rara, se omite: {f}", file=sys.stderr)
             continue
-        d = deptos.setdefault(cd, {"codigo": cd, "nombre": nombre_propio(f["dpto"]), "municipios": []})
+        d = deptos.setdefault(
+            cd, {"codigo": cd, "nombre": nombre_propio(f["dpto"]), "municipios": []}
+        )
         d["municipios"].append([cm, nombre_propio(f["nom_mpio"])])
     lista = sorted(deptos.values(), key=lambda d: orden(d["nombre"]))
     for d in lista:
         d["municipios"].sort(key=lambda m: orden(m[1]))
-    datos_al = datetime.fromtimestamp(meta.get("rowsUpdatedAt", 0), UTC).astimezone(BOGOTA).date().isoformat()
+    datos_al = (
+        datetime.fromtimestamp(meta.get("rowsUpdatedAt", 0), UTC)
+        .astimezone(BOGOTA)
+        .date()
+        .isoformat()
+    )
     salida = {
         "fuente": "DIVIPOLA - Códigos municipios (DANE), datos.gov.co",
         "conjunto": CONJUNTO,
@@ -81,8 +103,13 @@ def main() -> int:
         "total_municipios": sum(len(d["municipios"]) for d in lista),
         "departamentos": lista,
     }
-    DESTINO.write_text(json.dumps(salida, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    print(f"Listo: {len(lista)} departamentos y {salida['total_municipios']} municipios (datos al {datos_al}).")
+    DESTINO.write_text(
+        json.dumps(salida, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        f"Listo: {len(lista)} departamentos y {salida['total_municipios']} municipios (datos al {datos_al})."
+    )
     return 0
 
 
